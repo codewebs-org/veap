@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
@@ -102,7 +102,9 @@ jobs:
 
             const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
 
-            if (!pkg.name?.startsWith("@veap/")) continue;
+            if (!pkg.name?.startsWith("@veap/") && pkg.name !== "create-veap") {
+              continue;
+            }
             if (pkg.private) continue;
 
             if (!pkg.version) {

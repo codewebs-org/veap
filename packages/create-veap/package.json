@@ -22,6 +22,7 @@
     "dev": "bun build --watch",
     "compile": "rimraf dist && rm -rf templates && cp -r ../../templates templates && rm -rf templates/README.md templates/*/node_modules templates/*/.next templates/*/.cache templates/*/*.tsbuildinfo && (for d in templates/*; do [ -d \"$d\" ] && mv \"$d/.gitignore\" \"$d/gitignore\" 2>/dev/null || true; done) && bun run build",
     "build": "tsc",
+    "prepublishOnly": "bun run compile",
     "test": "npm_config_user_agent=bun vitest run"
   },
   "dependencies": {

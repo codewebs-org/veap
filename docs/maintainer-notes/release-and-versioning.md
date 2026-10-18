@@ -102,7 +102,7 @@ sequenceDiagram
   participant NPM as npm Registry
   participant Git as GitHub Releases & Tags
 
-  CI->>CI: Setup Bun 1.4.2 & Node.js 22
+  CI->>CI: Setup Bun 1.4.2 & Node.js 24
   CI->>CI: bun install (verified with node_modules check)
   CI->>Build: bun run build (compile all packages to dist/)
   CI->>Graph: Scan packages/* (filter private packages, topological sort)
@@ -139,8 +139,9 @@ sequenceDiagram
    globally.
 4. **Collision-free tagging:** Tags are prefixed with the package name without the
    scope: `${SAFE_NAME}-v${PKG_VERSION}` (for example `kernel-v0.2.0`,
-   `database-v0.1.7`). This prevents Git tag collisions when multiple packages
-   share the same version number.
+   `database-v0.1.7`, or `create-veap-v0.4.5` for unscoped packages). This
+   prevents Git tag collisions when multiple packages share the same version
+   number.
 
 ---
 
