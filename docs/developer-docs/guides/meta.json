@@ -1,0 +1,10 @@
+{
+  "title": "Guides",
+  "pages": [
+    "testing",
+    "custom-plugins",
+    "deployment-and-production",
+    "background-jobs-and-cache",
+    "troubleshooting"
+  ]
+}

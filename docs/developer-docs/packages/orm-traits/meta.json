@@ -1,0 +1,4 @@
+{
+  "title": "ORM traits",
+  "pages": ["index", "translatable", "taggable", "categorizable", "commentable"]
+}

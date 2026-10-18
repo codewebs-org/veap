@@ -1,0 +1,99 @@
+# @veap/kernel
+
+## 0.2.2
+
+### Patch Changes
+
+- chore: bump version
+
+## 0.2.1
+
+### Patch Changes
+
+- Support method parameter injection with `@Inject(token)` and `Container.call()`:
+  
+  - Extended the `@Inject(token)` parameter decorator to store metadata for class method parameters (`propertyKey`) in addition to constructor parameters.
+  - Added `Container.call(target, methodKey, ...extraArgs)` to resolve `@Inject`-decorated method parameters (as well as emitted `design:paramtypes` class tokens) from the IoC container and forward remaining arguments.
+  - Made `Container` resolve and report `has(Container) === true` for itself out of the box.
+  
+  Framework independence and Next.js adapter isolation in `@veap/kernel`:
+  
+  - **Next.js adapter subpath isolation**: Isolated Next.js runtime adapters (`NextHttpAdapter`, `NextEventBusAdapter`, `NextResultAdapter`) into the `@veap/kernel/next` subpath export, keeping kernel core 100% framework-independent.
+  - **Framework-neutral control flow**: Abstracted Next.js DIGEST error handling into reusable helpers (`isRedirectError`, `isNotFoundError`) to eliminate hardcoded framework string matches from kernel core.
+  - **Port contracts for cookies and request context**: Added framework-agnostic `COOKIE_STORE` and `REQUEST_CONTEXT` tokens for decoupled cookie and request lifecycle access.
+
+## 0.2.0
+
+### Minor Changes
+
+- Remove official Waku.js HTTP adapters (`WakuCookieStore`, `WakuRequestContext`, `WakuRedirect`, `runWithWakuRequest`, `registerWakuHttp`). Custom frameworks can continue implementing `ICookieStore` and `IHttpRequestContext` ports in application or custom provider code.
+
+## 0.1.6
+
+### Patch Changes
+
+- Add the `about`, `config:show` and `make:command` built-in console commands.
+  
+  - `about` summarizes the kernel version, environment, project root, Node version and the number of configured providers and commands.
+  - `config:show {key?}` prints the resolved `ConfigService` configuration, or a single `KEY=value` line (exit `1` for an unknown key).
+  - `make:command {name} {--dir=path}` scaffolds a `Command` subclass into the project through the console-free `generateCommand()` helper, deriving the class name from the last namespace segment and refusing to overwrite an existing file.
+
+## 0.1.5
+
+### Patch Changes
+
+- fix: update versions and dependencies
+
+## 0.1.4
+
+### Patch Changes
+
+- Add the `veap` console (`@veap/kernel/cli` plus a `veap` binary) whose command list is composed from the application's service providers.
+  
+  - `ServiceProvider.commands?()` declarations are collected by `Application.bootstrap()` into the process-global `CommandRegistry` (also bound as the `COMMANDS` token), and `Application.providers()` exposes the configured provider list without mutating it.
+  - Commands use Laravel-style signatures (`make:model {name} {--m|migration}`) parsed by `parseSignature()` / `matchArgs()`, and render through an `Output` port.
+  - `list` and `help` ship as built-ins, alongside `--version`, `--verbose`, `--quiet`, `--no-ansi`, `--cwd` and `--env`.
+  - `ConsoleApplication` / `runConsole()` resolve the project root, load `.env` files, install memory cookie/header adapters so no command needs a request scope, set `VEAP_CLI=1`, run exactly one command and always shut the application down — including on `SIGINT`.
+
+## 0.1.3
+
+### Patch Changes
+
+- Add Waku.js and Web Standards HTTP adapters for `COOKIE_STORE` and `REQUEST_CONTEXT` ports:
+  - `WakuRequestContext`: reads headers from `Request` (or ambient `AsyncLocalStorage`) and throws `WakuRedirect` on redirection.
+  - `WakuCookieStore`: reads and parses cookies from `Request` headers and appends `Set-Cookie` headers to response headers.
+  - `runWithWakuRequest`: wraps execution in an ambient `AsyncLocalStorage` request store.
+  - `registerWakuHttp`: convenience helper to bind Waku adapters into the IoC container.
+
+## 0.1.2
+
+### Patch Changes
+
+- Add `NextCookieStore` and `NextRequestContext` transport adapters and bind them by default in `KernelServiceProvider`.
+
+## 0.1.1
+
+### Patch Changes
+
+- Fix native Node.js ESM module resolution, enhance application lifecycle and security, decouple domain configs/tokens, and add comprehensive test coverage:
+  
+  - Decouple domain-specific properties (`intl`, `privatePath`) from `VeapConfig` in `@veap/kernel`, allowing domain packages (`@veap/intl`, `@veap/plugins`) to augment `VeapConfig` via TypeScript Module Augmentation.
+  - Update `DEFAULT_CONFIG` in kernel to an agnostic empty default (`{}`).
+  - Remove all domain-specific IoC tokens (`DATABASE`, `CLI_SERVICE`, `AUTH_ROUTES`, `ROUTER_SERVICE`, `SITE_LAYOUT`, `APP_PLUGINS`, `APP_MIGRATIONS`) from `packages/kernel/src/ioc/tokens.ts`, transferring direct ownership to `@veap/database`, `@veap/auth`, and `@veap/plugins`.
+  - Remove hardcoded domain methods `withMigrations` and `withPlugins` from kernel's `ApplicationBuilder` and `Application`, keeping the kernel builder purely generic (`use`, `with`, `withProviders`, `create`).
+  - Fix missing `.js` extensions across all relative module imports/exports in `src/` ensuring full compliance with native Node.js ESM loaders (`ERR_MODULE_NOT_FOUND` resolution).
+  - Add explicit subpath exports (`./ioc`, `./errors`, `./logging`, `./http`, `./cache`, `./config`) in `package.json`.
+  - Implement graceful shutdown orchestration in `Application.prototype.shutdown()` and `Application.shutdown()`, shutting down registered service providers in reverse order (LIFO), publishing `system:stop`, and resetting bootstrap state.
+  - Add `shutdown?(): void | Promise<void>` lifecycle method to `ServiceProvider`.
+  - Add provider deduplication in `Application.bootstrap()` to prevent double registration when providers are registered redundantly.
+  - Add disposable subscription support (`() => void`) to `EventBus.prototype.subscribe()` and add `EventBus.prototype.once()` for one-time event handlers.
+  - Add `Container.prototype.reset()` to clear both cached instances and registered provider definitions in test environments.
+  - Fix config path resolution in `config.loader.ts` to correctly detect `veap.config.js`.
+  - Harden `verifySameOrigin` in `http/security.ts` by safely parsing multi-proxy `x-forwarded-host` headers and performing case-insensitive host comparison.
+  - Add comprehensive test suites covering HTTP security (`verifySameOrigin`), `MemoryCookieStore`, `MemoryRequestContext`, `MemoryCacheProvider` TTL expiration, `AppError`/`Result`/`httpStatusForErrorCode`, disposable event subscriptions, `once()`, provider deduplication, and application shutdown (increasing test count from 35 to 67 passing tests).
+
+## 0.1.0
+
+### Minor Changes
+
+- Initial public scaffold of the Veap kernel.

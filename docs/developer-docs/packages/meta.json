@@ -1,0 +1,15 @@
+{
+  "title": "Packages (@veap/*)",
+  "pages": [
+    "database",
+    "orm-traits",
+    "auth",
+    "plugins",
+    "intl",
+    "mail",
+    "settings",
+    "storage",
+    "ui",
+    "create-veap"
+  ]
+}

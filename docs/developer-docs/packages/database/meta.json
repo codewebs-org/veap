@@ -1,0 +1,9 @@
+{
+  "title": "@veap/database",
+  "pages": [
+    "index",
+    "models-and-relations",
+    "migrations-and-transactions",
+    "seeders-and-factories"
+  ]
+}

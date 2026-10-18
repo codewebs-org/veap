@@ -1,0 +1,19 @@
+{
+  "title": "Packages",
+  "pages": [
+    "kernel",
+    "database",
+    "auth",
+    "plugins",
+    "intl",
+    "mail",
+    "settings",
+    "storage",
+    "ui",
+    "translatable",
+    "taggable",
+    "categorizable",
+    "commentable",
+    "create-veap"
+  ]
+}

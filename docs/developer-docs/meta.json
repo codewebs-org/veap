@@ -1,0 +1,12 @@
+{
+  "title": "Veap Documentation",
+  "pages": [
+    "index",
+    "getting-started",
+    "fundamentals",
+    "packages",
+    "guides",
+    "tutorials",
+    "reference"
+  ]
+}

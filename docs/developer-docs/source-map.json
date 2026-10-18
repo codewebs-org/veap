@@ -1,0 +1,90 @@
+{
+  "generatedAt": "2026-10-17",
+  "purpose": "Source provenance for this documentation snapshot. Git tree SHAs refer to the main branch tree returned during source inspection.",
+  "repositories": [
+    {
+      "package": "@veap/kernel",
+      "version": "0.2.0",
+      "repository": "https://github.com/veapjs/veap-kernel",
+      "gitTreeSha": "0e9158a141ca13f96790e30f66d200e170ddc31a"
+    },
+    {
+      "package": "@veap/database",
+      "version": "0.1.7",
+      "repository": "https://github.com/veapjs/veap-database",
+      "gitTreeSha": "e3506fd90d63f08ef6a62e9220acf029d0b97285"
+    },
+    {
+      "package": "@veap/mail",
+      "version": "0.1.7",
+      "repository": "https://github.com/veapjs/veap-mail",
+      "gitTreeSha": "9407e5cd7f16c56b03d06c842adde697a18bc67f"
+    },
+    {
+      "package": "@veap/intl",
+      "version": "0.1.7",
+      "repository": "https://github.com/veapjs/veap-intl",
+      "gitTreeSha": "86f92d763745e5a6b59d30c671d60a189c66d18b"
+    },
+    {
+      "package": "@veap/settings",
+      "version": "0.1.7",
+      "repository": "https://github.com/veapjs/veap-settings",
+      "gitTreeSha": "435748a8e701734b83765be5a099055fea51747b"
+    },
+    {
+      "package": "@veap/storage",
+      "version": "0.1.7",
+      "repository": "https://github.com/veapjs/veap-storage",
+      "gitTreeSha": "35d182dbcba4a23ac2283b56b76b3da9785265db"
+    },
+    {
+      "package": "@veap/plugins",
+      "version": "0.1.7",
+      "repository": "https://github.com/veapjs/veap-plugins",
+      "gitTreeSha": "c11b509d0ef70140114f22d0e242383059f58b0f"
+    },
+    {
+      "package": "@veap/auth",
+      "version": "0.1.7",
+      "repository": "https://github.com/veapjs/veap",
+      "gitTreeSha": "2d1e3d40123cd9f866737f8a0bb66050f8621dc4"
+    },
+    {
+      "package": "@veap/ui",
+      "version": "0.1.2",
+      "repository": "https://github.com/veapjs/veap",
+      "directory": "packages/ui"
+    },
+    {
+      "package": "create-veap",
+      "version": "0.4.4",
+      "repository": "https://github.com/veapjs/veap",
+      "directory": "packages/create-veap"
+    },
+    {
+      "package": "@veap/translatable",
+      "version": "0.1.0",
+      "repository": "https://github.com/veapjs/veap",
+      "directory": "packages/veap-translatable"
+    },
+    {
+      "package": "@veap/taggable",
+      "version": "0.1.0",
+      "repository": "https://github.com/veapjs/veap",
+      "directory": "packages/veap-taggable"
+    },
+    {
+      "package": "@veap/categorizable",
+      "version": "0.1.0",
+      "repository": "https://github.com/veapjs/veap",
+      "directory": "packages/veap-categorizable"
+    },
+    {
+      "package": "@veap/commentable",
+      "version": "0.1.0",
+      "repository": "https://github.com/veapjs/veap",
+      "directory": "packages/veap-commentable"
+    }
+  ]
+}

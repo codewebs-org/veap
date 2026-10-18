@@ -1,0 +1,382 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: veap-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    name: Build, Tag & Publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+
+          # Save logs for debugging
+          BUN_LOG=/tmp/bun-install.log
+          NPM_LOG=/tmp/npm-ci.log
+
+          # Try bun install up to 3 times (handles transient registry/network failures)
+          for i in 1 2 3; do
+            echo "bun install: attempt $i"
+            if bun install 2>&1 | tee "$BUN_LOG"; then
+              echo "bun install succeeded"
+              INSTALL_OK=1
+              break
+            else
+              echo "bun install failed (attempt $i)"
+              sleep $((i * 5))
+            fi
+          done
+
+          # If bun failed after retries, fall back to npm ci
+          if [ -z "${INSTALL_OK:-}" ]; then
+            echo "bun install failed after retries — falling back to npm ci"
+            npm ci 2>&1 | tee "$NPM_LOG"
+          fi
+
+          echo "---- tail of bun install log ----"
+          tail -n +1 "$BUN_LOG" || true
+          echo "---- tail of npm ci log ----"
+          tail -n +1 "$NPM_LOG" || true
+
+          # Verify node_modules exists and is not empty
+          if [ ! -d "node_modules" ] || [ -z "$(ls -A node_modules 2>/dev/null)" ]; then
+            echo "::error::Dependency install failed (check logs above)."
+            exit 1
+          fi
+
+      - name: Build packages
+        run: bun run build
+
+      - name: Resolve dependency graph
+        id: graph
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const root = "packages";
+          const packages = new Map();
+
+          for (const entry of fs.readdirSync(root, {
+            withFileTypes: true
+          })) {
+            if (!entry.isDirectory()) continue;
+
+            const dir = path.join(root, entry.name);
+            const file = path.join(dir, "package.json");
+
+            if (!fs.existsSync(file)) continue;
+
+            const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
+
+            if (!pkg.name?.startsWith("@veap/")) continue;
+            if (pkg.private) continue;
+
+            if (!pkg.version) {
+              throw new Error(`Missing version in ${file}`);
+            }
+
+            if (packages.has(pkg.name)) {
+              throw new Error(`Duplicate package: ${pkg.name}`);
+            }
+
+            packages.set(pkg.name, { dir, pkg });
+          }
+
+          const dependencies = new Map();
+
+          for (const [name, { pkg }] of packages) {
+            const runtime = {
+              ...pkg.dependencies,
+              ...pkg.optionalDependencies
+            };
+
+            const internal = [];
+
+            for (const [dep, range] of Object.entries(runtime)) {
+              if (range.startsWith("workspace:")) {
+                throw new Error(
+                  `${name}: ${dep} uses ${range}. ` +
+                  "Replace workspace ranges before publishing."
+                );
+              }
+
+              if (packages.has(dep)) {
+                internal.push(dep);
+              }
+            }
+
+            dependencies.set(name, internal);
+          }
+
+          const ordered = [];
+          const visiting = new Set();
+          const visited = new Set();
+
+          function visit(name, chain = []) {
+            if (visited.has(name)) return;
+
+            if (visiting.has(name)) {
+              throw new Error(
+                `Dependency cycle: ${[...chain, name].join(" -> ")}`
+              );
+            }
+
+            visiting.add(name);
+
+            for (const dep of dependencies.get(name) ?? []) {
+              visit(dep, [...chain, name]);
+            }
+
+            visiting.delete(name);
+            visited.add(name);
+            ordered.push(name);
+          }
+
+          for (const name of packages.keys()) {
+            visit(name);
+          }
+
+          const lines = ordered.map(name => {
+            const { dir, pkg } = packages.get(name);
+
+            return [
+              name,
+              pkg.version,
+              dir
+            ].join("\t");
+          });
+
+          fs.writeFileSync(
+            process.env.GITHUB_OUTPUT,
+            `count=${ordered.length}\n`,
+            { flag: "a" }
+          );
+
+          fs.writeFileSync("/tmp/veap-release-order.tsv",
+            lines.join("\n") + (lines.length ? "\n" : "")
+          );
+
+          console.log("Resolved release order:");
+
+          for (const line of lines) {
+            console.log(line.replaceAll("\t", " -> "));
+          }
+          NODE
+
+      - name: Publish, wait for npm, tag and release
+        shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NODE_AUTH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          NPM_TIMEOUT: "1200"
+          NPM_INTERVAL: "15"
+        run: |
+          set -euo pipefail
+
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::Missing NPM_TOKEN or NODE_AUTH_TOKEN secret."
+            exit 1
+          fi
+
+          export NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
+
+          wait_for_npm() {
+            local spec="$1"
+            local expected="${2:-}"
+            local start now elapsed actual
+
+            start=$(date +%s)
+
+            echo "Waiting for npm: $spec"
+
+            while true; do
+              actual="$(npm view "$spec" version 2>/dev/null || true)"
+
+              if [ -n "$actual" ]; then
+                if [ -z "$expected" ] || [ "$actual" = "$expected" ]; then
+                  echo "Available on npm: $spec -> $actual"
+                  return 0
+                fi
+              fi
+
+              now=$(date +%s)
+              elapsed=$((now - start))
+
+              if [ "$elapsed" -ge "$NPM_TIMEOUT" ]; then
+                echo "::error::Timeout waiting for $spec"
+                return 1
+              fi
+
+              echo "Not available yet; retrying in ${NPM_INTERVAL}s (${elapsed}s elapsed)."
+              sleep "$NPM_INTERVAL"
+            done
+          }
+
+          while IFS=$'\t' read -r PKG_NAME PKG_VERSION PKG_DIR; do
+            [ -z "$PKG_NAME" ] && continue
+
+            echo ""
+            echo "=========================================="
+            echo "Processing ${PKG_NAME}@${PKG_VERSION}"
+            echo "=========================================="
+
+            # Validate runtime dependency ranges and wait for
+            # all external @veap dependencies before publishing.
+            node - "$PKG_DIR/package.json" <<'NODE'
+          const fs = require("node:fs");
+          const pkg = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+
+          for (const field of ["dependencies", "optionalDependencies"]) {
+            for (const [name, range] of Object.entries(pkg[field] ?? {})) {
+              if (name.startsWith("@veap/") && range.startsWith("workspace:")) {
+                throw new Error(`${pkg.name}: ${name} still uses ${range}`);
+              }
+            }
+          }
+          NODE
+
+            # Wait for every runtime @veap dependency.
+            while IFS=$'\t' read -r DEP_NAME DEP_VERSION DEP_DIR; do
+              [ -z "$DEP_NAME" ] && continue
+
+              # Skip the package itself.
+              [ "$DEP_NAME" = "$PKG_NAME" ] && continue
+
+              # The package graph is topologically sorted. For internal
+              # runtime dependencies, wait for the exact local version.
+              if node - "$PKG_DIR/package.json" "$DEP_NAME" <<'NODE'
+          const fs = require("node:fs");
+          const pkg = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const dep = process.argv[3];
+          const deps = {
+            ...pkg.dependencies,
+            ...pkg.optionalDependencies
+          };
+          process.exit(Object.hasOwn(deps, dep) ? 0 : 1);
+          NODE
+              then
+                # Only wait for this exact version when the package
+                # declares the dependency and the local package version
+                # satisfies its declared semver range.
+                if node - "$PKG_DIR/package.json" "$DEP_NAME" "$DEP_VERSION" <<'NODE'
+          const fs = require("node:fs");
+          const { execFileSync } = require("node:child_process");
+          const pkg = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const dep = process.argv[3];
+          const version = process.argv[4];
+          const deps = {
+            ...pkg.dependencies,
+            ...pkg.optionalDependencies
+          };
+          const range = deps[dep];
+
+          try {
+            execFileSync("npm", [
+              "exec", "--yes", "--package=semver",
+              "--", "node", "-e",
+              "const s=require('semver');process.exit(s.satisfies(process.argv[1],process.argv[2])?0:1)",
+              version, range
+            ], { stdio: "ignore" });
+            process.exit(0);
+          } catch {
+            process.exit(1);
+          }
+          NODE
+                then
+                  wait_for_npm "${DEP_NAME}@${DEP_VERSION}" "$DEP_VERSION"
+                else
+                  echo "Local ${DEP_NAME}@${DEP_VERSION} does not satisfy this package's declared range; checking declared range instead."
+                  RANGE="$(node - "$PKG_DIR/package.json" "$DEP_NAME" <<'NODE'
+          const fs = require("node:fs");
+          const pkg = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          console.log({
+            ...pkg.dependencies,
+            ...pkg.optionalDependencies
+          }[process.argv[3]]);
+          NODE
+          )"
+                  wait_for_npm "${DEP_NAME}@${RANGE}"
+                fi
+              fi
+            done < /tmp/veap-release-order.tsv
+
+            CURRENT_VERSION="$(
+              npm view "${PKG_NAME}@${PKG_VERSION}" version 2>/dev/null || true
+            )"
+
+            if [ "$CURRENT_VERSION" = "$PKG_VERSION" ]; then
+              echo "${PKG_NAME}@${PKG_VERSION} already published."
+            else
+              echo "Publishing ${PKG_NAME}@${PKG_VERSION}..."
+
+              (
+                cd "$PKG_DIR"
+                npm publish --access public
+              )
+            fi
+
+            # Wait for this exact package version before continuing.
+            wait_for_npm "${PKG_NAME}@${PKG_VERSION}" "$PKG_VERSION"
+
+            # Package-specific tag avoids collisions between packages
+            # that share the same version number.
+            SAFE_NAME="${PKG_NAME#@veap/}"
+            TAG="${SAFE_NAME}-v${PKG_VERSION}"
+
+            if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+              echo "Git tag ${TAG} already exists."
+            else
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+
+              git tag -a "$TAG" -m "Release ${PKG_NAME}@${PKG_VERSION}"
+              git push origin "$TAG"
+            fi
+
+            if gh release view "$TAG" >/dev/null 2>&1; then
+              echo "GitHub Release ${TAG} already exists."
+            else
+              gh release create "$TAG" \
+                --title "${PKG_NAME}@${PKG_VERSION}" \
+                --generate-notes
+            fi
+
+            echo "Completed ${PKG_NAME}@${PKG_VERSION}"
+
+          done < /tmp/veap-release-order.tsv
+
+          echo "All Veap packages have been processed."

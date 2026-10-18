@@ -1,0 +1,4 @@
+{
+  "title": "@veap/auth",
+  "pages": ["index", "actions-and-rbac", "verification-and-security"]
+}

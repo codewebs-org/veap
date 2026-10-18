@@ -1,0 +1,9 @@
+{
+  "title": "Getting Started",
+  "pages": [
+    "installation",
+    "first-application",
+    "nextjs-integration",
+    "project-structure"
+  ]
+}

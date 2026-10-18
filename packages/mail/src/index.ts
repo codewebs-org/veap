@@ -1,0 +1,10 @@
+export * from "./composition.js";
+export * from "./context.js";
+export * from "./mail.js";
+export type { MailMessage as SendMailOptions } from "./mail-message.js";
+export * from "./mail-message.js";
+export * from "./mailer.js";
+export * from "./provider.js";
+export * from "./providers/console.provider.js";
+export * from "./providers/nodemailer.provider.js";
+export { NodemailerMailService as MailService } from "./providers/nodemailer.provider.js";

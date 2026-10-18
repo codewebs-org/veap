@@ -1,0 +1,126 @@
+# create-veap
+
+## 0.4.5
+
+### Patch Changes
+
+- chore: bump version
+
+## 0.4.4
+
+### Patch Changes
+
+- feat: add support for positional project name argument and improve prompts in CLI
+- refactor: include tests in tsconfig and add vitest configuration
+
+## 0.4.3
+
+### Patch Changes
+
+- fix: fix deps
+
+## 0.4.2
+
+### Patch Changes
+
+- fix: fix templates/01-basic instrumentation.ts and veap.config.ts
+
+## 0.4.1
+
+### Patch Changes
+
+- bump: fix README.md
+
+## 0.4.0
+
+### Minor Changes
+
+- refactor: remove tests and update project structure
+
+  - Deleted existing test files for package-manager, project-name, and smoke tests.
+  - Updated tsconfig.json to include src directory and exclude templates.
+  - Added cli.js as entry point for the CLI.
+  - Created vitest binary for easier CLI testing.
+  - Introduced new helper functions for template installation and example option parsing.
+  - Added comprehensive CLI tests to validate command-line arguments and template selection.
+
+## 0.3.3
+
+### Patch Changes
+
+- bump(deps): fix typescript version
+
+## 0.3.2
+
+### Patch Changes
+
+- - Fix Docker configuration to be interactive/optional when creating a new application without explicit `--docker` or `--no-docker` flags
+  - Add GitHub Actions CI and Release workflows
+  - Add unit test coverage for CLI Docker options parsing
+
+## 0.3.1
+
+### Patch Changes
+
+- - Add Turbopack CSS loader support for Next.js 16.4 in overlay-full stub
+  - Add README.md stub to overlay-full with setup instructions, project structure, CLI commands, and documentation links
+  - Automatically detect the running package manager without interactive prompts, and add `--pnpm`, `--bun`, `--npm`, `--yarn` CLI flags
+
+## 0.3.0
+
+### Minor Changes
+
+- feat: add declarative site layout stubs and (site) route group
+
+  - Added `components/site-layout.tsx.stub` with modular slots (`ExtensionPoint`).
+  - Added `app/(site)/layout.tsx.stub` for native public routes.
+  - Configured `.withSiteLayout(SiteLayout)` in `lib/veap.ts.stub`.
+  - Updated test suites verifying full overlay completeness.
+
+## 0.2.0
+
+### Minor Changes
+
+- ### Remove Legacy Templates Scaffolding and Align Stubs with Modern Architecture
+  - **Workspace & Scaffolding Updates**:
+    - Removed `templates/` folder creation from default project initialization in `initProject`.
+    - Removed `templates/*` pattern from package manager workspace configurations across `pnpm` (`pnpm-workspace.yaml`), `npm`, `yarn`, and `bun` (`package.json.workspaces`).
+  - **Overlay Stubs Clean Up**:
+    - Removed `.withTemplates([])` from `stubs/overlay-full/lib/veap.ts.stub`.
+    - Updated `stubs/overlay-full/AGENTS.md.stub` project structure instructions to remove references to `templates/`.
+
+## 0.1.4
+
+### Patch Changes
+
+- Add package manager flags to create-next-app and fallback to npx on runner network failure
+
+## 0.1.3
+
+### Patch Changes
+
+- Add `better-sqlite3` to scaffolded project dependencies:
+  - Include `better-sqlite3: "latest"` in `FULL_MANIFEST` dependencies so generated applications have the native SQLite driver installed out-of-the-box.
+
+## 0.1.2
+
+### Patch Changes
+
+- Add dedicated bin executable wrapper and update CLI binary entry point:
+  - Add `bin/veap.js` executable wrapper to execute compiled CLI from dist.
+  - Update `package.json` bin mapping to reference `./bin/veap.js`.
+
+## 0.1.1
+
+### Patch Changes
+
+- Update default scaffold dependencies and template configuration:
+  - Use `latest` for `@veap/framework` and `@veap/ui` dependencies instead of workspace protocols.
+  - Remove pre-installed `@veap/minimal-template` dependency, starting generated projects with clean `.withTemplates([])`.
+  - Update test expectations for scaffolded package.json dependencies.
+
+## 0.1.0
+
+### Minor Changes
+
+- First releases of `create-veap` project scaffolder with the minimal templates.

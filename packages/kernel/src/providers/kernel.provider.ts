@@ -1,0 +1,119 @@
+import { CACHE_PROVIDER, MemoryCacheProvider } from "../cache/index.js";
+import { COMMANDS, commands } from "../cli/registry.js";
+import { CONFIG_SERVICE, ConfigService, VEAP_CONFIG } from "../config/index.js";
+import { VeapConfigProvider } from "../config/veap-config.provider.js";
+import { EVENT_BUS, EventBus, eventBus } from "../events/index.js";
+import {
+  COOKIE_STORE,
+  MemoryCookieStore,
+  MemoryRequestContext,
+  REQUEST_CONTEXT,
+} from "../http/index.js";
+import { ServiceProvider } from "../ioc/service-provider.js";
+import { ConsoleLogger, LOGGER, logger } from "../logging/index.js";
+
+export class KernelServiceProvider extends ServiceProvider {
+  register(): void {
+    this.container.register({
+      token: EventBus,
+      useValue: eventBus,
+      singleton: true,
+    });
+
+    this.container.register({
+      token: EVENT_BUS,
+      useValue: eventBus,
+      singleton: true,
+    });
+
+    eventBus.setLogger(logger);
+
+    // Console command registry: providers may either declare `commands()` or
+    // resolve this token and register dynamically.
+    this.container.register({
+      token: COMMANDS,
+      useValue: commands,
+      singleton: true,
+    });
+
+    this.container.register({
+      token: ConsoleLogger,
+      useClass: ConsoleLogger,
+      singleton: true,
+    });
+
+    this.container.register({
+      token: LOGGER,
+      useValue: logger,
+      singleton: true,
+    });
+
+    this.container.register({
+      token: ConfigService,
+      useClass: ConfigService,
+      singleton: true,
+    });
+
+    this.container.register({
+      token: CONFIG_SERVICE,
+      useClass: ConfigService,
+      singleton: true,
+    });
+
+    this.container.register({
+      token: CACHE_PROVIDER,
+      useClass: MemoryCacheProvider,
+      singleton: true,
+    });
+
+    // IVeapConfigProvider port → the jiti `veap.config.ts` adapter
+    this.container.register({
+      token: VEAP_CONFIG,
+      useClass: VeapConfigProvider,
+      singleton: true,
+    });
+
+    // ICookieStore / IHttpRequestContext ports → fallback to in-memory transport
+    // Next.js applications register NextTransportServiceProvider from '@veap/kernel/next'
+    if (!this.container.has(COOKIE_STORE)) {
+      this.container.register({
+        token: COOKIE_STORE,
+        useClass: MemoryCookieStore,
+        singleton: true,
+      });
+    }
+
+    if (!this.container.has(REQUEST_CONTEXT)) {
+      this.container.register({
+        token: REQUEST_CONTEXT,
+        useClass: MemoryRequestContext,
+        singleton: true,
+      });
+    }
+  }
+
+  async boot(): Promise<void> {
+    try {
+      if (
+        this.container.has(VEAP_CONFIG) &&
+        this.container.has(ConfigService)
+      ) {
+        const configProvider = await this.container.resolve(VEAP_CONFIG);
+        const veapConfig = await configProvider.get();
+        const configService = await this.container.resolve(ConfigService);
+        for (const [key, value] of Object.entries(veapConfig)) {
+          if (value !== undefined) {
+            configService.set(key, value);
+          }
+        }
+      }
+    } catch (_e) {
+      // Configuration fallback
+    }
+
+    logger.debug(
+      "veap:kernel",
+      "Kernel core services registered successfully.",
+    );
+  }
+}
