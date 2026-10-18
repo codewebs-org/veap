@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "bun run build:packages && bun run build:plugins",
+    "build": "bun run build:packages",
     "build:packages": "bun --filter './packages/**' build",
     "build:plugins": "bun --filter './plugins/**' build",
     "dev": "bun --filter './packages/**' dev --filter './plugins/**' dev",
