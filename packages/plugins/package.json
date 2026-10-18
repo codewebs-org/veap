@@ -2,11 +2,12 @@
   "name": "@veap/plugins",
   "version": "0.1.9",
   "description": "Plugin lifecycle, extension points, and virtual router for Veap",
-  "bugs": "https://github.com/veapjs/veap-plugins/issues",
+  "author": "Damian Miller",
+  "bugs": "https://github.com/veapjs/veap/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/veapjs/veap.git",
-    "directory": "packages/veap-plugins"
+    "directory": "packages/plugins"
   },
   "type": "module",
   "license": "MIT",

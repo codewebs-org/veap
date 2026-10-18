@@ -2,11 +2,12 @@
   "name": "@veap/database",
   "version": "0.1.9",
   "description": "Eloquent-like Active Record ORM powered by Knex with AsyncLocalStorage transactions",
-  "bugs": "https://github.com/veapjs/veap-database/issues",
+  "author": "Damian Miller",
+  "bugs": "https://github.com/veapjs/veap/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/veapjs/veap.git",
-    "directory": "packages/veap-database"
+    "directory": "packages/database"
   },
   "type": "module",
   "license": "MIT",

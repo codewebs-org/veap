@@ -2,11 +2,12 @@
   "name": "@veap/storage",
   "version": "0.1.9",
   "description": "File storage service and local driver for Veap",
-  "bugs": "https://github.com/veapjs/veap-storage/issues",
+  "author": "Damian Miller",
+  "bugs": "https://github.com/veapjs/veap/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/veapjs/veap.git",
-    "directory": "packages/veap-storage"
+    "directory": "packages/storage"
   },
   "type": "module",
   "license": "MIT",

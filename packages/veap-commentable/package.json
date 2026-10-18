@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.1.0",
   "description": "Polymorphic threaded comment system for Veap ORM and UI",
+  "author": "Damian Miller",
+  "bugs": "https://github.com/veapjs/veap/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/veapjs/veap.git",

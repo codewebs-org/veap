@@ -2,11 +2,12 @@
   "name": "@veap/intl",
   "version": "0.1.9",
   "description": "Internationalization, message formatting, and locale detection for Veap",
-  "bugs": "https://github.com/veapjs/veap-intl/issues",
+  "author": "Damian Miller",
+  "bugs": "https://github.com/veapjs/veap/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/veapjs/veap.git",
-    "directory": "packages/veap-intl"
+    "directory": "packages/intl"
   },
   "type": "module",
   "license": "MIT",

@@ -2,11 +2,12 @@
   "name": "@veap/kernel",
   "version": "0.2.2",
   "description": "Core dependency injection container, event bus, and application lifecycle for Veap",
-  "bugs": "https://github.com/veapjs/veap-kernel/issues",
+  "author": "Damian Miller",
+  "bugs": "https://github.com/veapjs/veap/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/veapjs/veap.git",
-    "directory": "packages/veap-kernel"
+    "directory": "packages/kernel"
   },
   "type": "module",
   "license": "MIT",

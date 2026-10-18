@@ -2,11 +2,12 @@
   "name": "@veap/settings",
   "version": "0.1.9",
   "description": "Application settings management, caching, and persistence for Veap",
-  "bugs": "https://github.com/veapjs/veap-settings/issues",
+  "author": "Damian Miller",
+  "bugs": "https://github.com/veapjs/veap/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/veapjs/veap.git",
-    "directory": "packages/veap-settings"
+    "directory": "packages/settings"
   },
   "type": "module",
   "license": "MIT",
