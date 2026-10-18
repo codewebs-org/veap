@@ -1,0 +1,943 @@
+{
+  "$schema": "https://veap.pl/schema/registry.json",
+  "name": "Veap Plugin Registry",
+  "version": "1.0.0",
+  "description": "Official plugin and template registry for the Veap application framework ecosystem",
+  "homepage": "https://veap.pl",
+  "repository": "https://github.com/veapjs/veap",
+  "items": [
+    {
+      "id": "blog-plugin",
+      "slug": "blog-plugin",
+      "name": "Veap Blog",
+      "package": "@veap/blog-plugin",
+      "version": "0.1.0",
+      "category": "content",
+      "type": "plugin",
+      "isNew": true,
+      "featured": true,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Comprehensive blog and publishing plugin for the Veap framework with Markdown/MDX editing, drafts, categories, tags, comments, and media integration.",
+      "purpose": "Provides full-featured content publishing capabilities, post lifecycle management, polymorphic categorization and tagging, and SEO-friendly rendering.",
+      "installation": {
+        "command": "bun veap add @veap/blog-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/blog-plugin`",
+          "The CLI automatically registers the plugin in `lib/plugins.gen.ts`",
+          "Migrations execute automatically on application startup (`bun dev`)"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": [
+          "media-plugin",
+          "categorizable",
+          "taggable",
+          "commentable",
+          "translatable"
+        ],
+        "packages": [
+          "next-mdx-remote@^6.0.0",
+          "remark-gfm@^4.0.1",
+          "date-fns@^4.1.0",
+          "@faker-js/faker@^9.4.0"
+        ]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "credits": [
+        {
+          "name": "MDX Remote",
+          "reason": "Markdown processing and server-rendered component pipeline",
+          "url": "https://github.com/hashicorp/next-mdx-remote"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Requires the active @veap/media-plugin to handle post attachments and featured images.",
+        "Automatically registers virtual router routes at /blog and an administration view at /admin/blog.",
+        "Supports polymorphic relationships with @veap/categorizable, @veap/taggable, and @veap/commentable."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/blog-plugin",
+        "issues": "https://github.com/veapjs/veap/issues",
+        "website": "https://veap.pl/docs/plugins/blog"
+      },
+      "usage": "// lib/veap.ts (auto-registered in lib/plugins.gen.ts)\nimport { Application } from \"@veap/kernel\";\nimport blogPlugin from \"@veap/blog-plugin\";\n\nexport const app = Application.configure()\n  .withDatabase()\n  .withPlugins([blogPlugin])\n  .create();\n\n// Querying blog posts in components or server actions:\nimport { BlogPost } from \"@veap/blog-plugin\";\n\nconst posts = await BlogPost.query()\n  .where(\"status\", \"published\")\n  .with([\"category\", \"tags\", \"comments\"])\n  .orderBy(\"published_at\", \"desc\")\n  .get();"
+    },
+    {
+      "id": "auth-plugin",
+      "slug": "auth-plugin",
+      "name": "Veap Auth",
+      "package": "@veap/auth-plugin",
+      "version": "0.1.0",
+      "category": "security",
+      "type": "plugin",
+      "isNew": false,
+      "featured": true,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Enterprise-grade multi-strategy authentication system with session management, credential hashing (Argon2id/bcrypt), and extensible sign-in UI slots.",
+      "purpose": "Enterprise-grade multi-strategy authentication, session management, and identity provider for the Veap Framework.\n\n### Core Capabilities\n- **Multi-Strategy Authentication**: Native credentials with Argon2id / bcrypt hashing, biometric WebAuthn Passkeys (Apple Touch ID, Face ID, Windows Hello, YubiKey), TOTP two-factor authentication, and Google OAuth 2.0 / OpenID Connect SSO.\n- **Session Lifecycle & Security**: High-performance session validation backed by encrypted cookies (`HttpOnly`, `SameSite=Lax`, `Secure`), request-level deduplication via React `cache()`, and multi-device session invalidation.\n- **Virtual Route Discovery**: Automatically discovers and mounts production-ready authentication routes: `/signin`, `/signup`, `/forgot-password`, `/reset-password`, and `/verify-email`.\n- **Pre-Built UI & Server Actions**: Accessible, pre-styled client components (`LoginForm`, `SignUpForm`) exported via `@veap/auth-plugin/client` alongside type-safe Server Actions under `@veap/auth-plugin/actions`.\n- **Modular Sub-Plugins**: Serves as the primary orchestrator for `@veap/auth-passkey-plugin`, `@veap/auth-totp-plugin`, and `@veap/auth-google-plugin` via pluggable login form slots and extensible pipelines.",
+      "installation": {
+        "command": "bun veap add @veap/auth-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/auth-plugin`",
+          "Configure required `ENCRYPTION_KEY` in your `.env` file",
+          "Migrations execute automatically on application startup (`bun dev`)"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["panel-plugin", "rbac-plugin"],
+        "packages": ["zod@^4.4.3", "date-fns@^4.4.0", "lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "credits": [
+        {
+          "name": "Lucide Icons",
+          "reason": "Security and lock icons",
+          "url": "https://lucide.dev"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Requires a 16, 24, or 32-byte ENCRYPTION_KEY (AES-GCM) configured in the runtime environment.",
+        "Provides Extension Points for SSO authentication methods (@veap/auth-google-plugin, @veap/auth-passkey-plugin, @veap/auth-totp-plugin).",
+        "Automatically manages secure cookie sessions with HttpOnly and SameSite protection."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/auth-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport authPlugin from \"@veap/auth-plugin\";\n\nexport const app = Application.configure()\n  .withDatabase()\n  .withAuth()\n  .withPlugins([authPlugin])\n  .create();\n\n// Verifying authentication in server components, layouts, or actions:\nimport { getCurrentSession } from \"@veap/auth/server\";\nimport { redirect } from \"next/navigation\";\n\nconst { session, user } = await getCurrentSession();\nif (!session || !user) {\n  redirect(\"/signin\");\n}\n\n// Rendering client login or registration components:\nimport { LoginForm, SignUpForm } from \"@veap/auth-plugin/client\";"
+    },
+    {
+      "id": "panel-plugin",
+      "slug": "panel-plugin",
+      "name": "Veap Panel",
+      "package": "@veap/panel-plugin",
+      "version": "0.1.0",
+      "category": "admin",
+      "type": "plugin",
+      "isNew": false,
+      "featured": true,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Modular administration dashboard providing extensible UI shells, navigation menus, widget slots, and user management.",
+      "purpose": "Serves as the central administration control plane for Veap applications. Allows other plugins to register sidebar items, dashboard widgets, and settings screens dynamically.",
+      "installation": {
+        "command": "bun veap add @veap/panel-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/panel-plugin`",
+          "The CLI auto-registers the plugin in `lib/plugins.gen.ts`",
+          "Migrations execute automatically on application startup (`bun dev`); visit `/app`"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": [
+          "auth-plugin",
+          "rbac-plugin",
+          "media-plugin",
+          "notifications-plugin"
+        ],
+        "packages": [
+          "@iconify/react@^5.2.0",
+          "lucide-react@^1.27.0",
+          "sonner@^2.0.0",
+          "zod@^4.4.3"
+        ]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "The main dashboard path is configured via `privatePath` in `veap.config.ts` (default: `/app`).",
+        "Other plugins can inject dashboard widgets using the `widgets` property in their IPlugin manifest.",
+        "Integrates with @veap/rbac-plugin to filter menu items based on authenticated user roles."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/panel-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport panelPlugin from \"@veap/panel-plugin\";\nimport { plugins } from \"./plugins.gen\";\n\nexport const app = Application.configure()\n  .withDatabase()\n  .withAuth()\n  .withRouter()\n  .withPlugins(plugins)\n  .create();"
+    },
+    {
+      "id": "media-plugin",
+      "slug": "media-plugin",
+      "name": "Veap Media Manager",
+      "package": "@veap/media-plugin",
+      "version": "0.1.0",
+      "category": "media",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Comprehensive media library and asset management plugin with drag-and-drop uploads, metadata extraction, image cropping, and folder organization.",
+      "purpose": "Manages digital assets, attachments, and files across the application with polymorphic associations to any model.",
+      "installation": {
+        "command": "bun veap add @veap/media-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/media-plugin`",
+          "CLI updates `lib/plugins.gen.ts` automatically",
+          "Migrations execute automatically on application startup (`bun dev`)"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["vercel-blob-plugin"],
+        "packages": [
+          "date-fns@^4.1.0",
+          "sonner@^2.0.0",
+          "zod@^4.4.3",
+          "lucide-react@^1.27.0"
+        ]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Stores files locally in `public/storage` by default with automatic static server routing.",
+        "Supports external storage providers (e.g. @veap/vercel-blob-plugin, AWS S3, Cloudflare R2).",
+        "Related models can use the polymorphic `morphMany('media_files')` relation to attach assets."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/media-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport mediaPlugin from \"@veap/media-plugin\";\n\nexport const app = Application.configure()\n  .withDatabase()\n  .withStorage()\n  .withPlugins([mediaPlugin])\n  .create();\n\n// Querying media files programmatically:\nimport { MediaFile } from \"@veap/media-plugin\";\n\nconst images = await MediaFile.query()\n  .where(\"mime_type\", \"like\", \"image/%\")\n  .orderBy(\"created_at\", \"desc\")\n  .get();"
+    },
+    {
+      "id": "manager-plugin",
+      "slug": "manager-plugin",
+      "name": "Veap Plugin Manager",
+      "package": "@veap/manager-plugin",
+      "version": "0.1.0",
+      "category": "admin",
+      "type": "plugin",
+      "isNew": false,
+      "featured": true,
+      "status": "official",
+      "hasMigrations": false,
+      "description": "Visual plugin management UI for enabling, disabling, discovering, and configuring plugins directly inside the admin panel.",
+      "purpose": "Provides a self-service control panel within the administration dashboard to manage installed plugins, inspect dependency graphs, and configure plugin settings.",
+      "installation": {
+        "command": "bun veap add @veap/manager-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/manager-plugin`",
+          "The plugin is automatically registered in `lib/plugins.gen.ts`",
+          "Open your admin dashboard to inspect and toggle plugins dynamically"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["panel-plugin"],
+        "packages": [
+          "@iconify/react@^5.2.0",
+          "lucide-react@^1.27.0",
+          "sonner@^2.0.0",
+          "zod@^4.4.3"
+        ]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Allows safe activation and deactivation of plugins without restarting the production server.",
+        "Validates the dependency graph to prevent disabling plugins required by other active modules.",
+        "Utilizes the central veap-registry.json repository for discovering remote plugins."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/manager-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport managerPlugin from \"@veap/manager-plugin\";\n\nexport const app = Application.configure()\n  .withPlugins([managerPlugin])\n  .create();"
+    },
+    {
+      "id": "rbac-plugin",
+      "slug": "rbac-plugin",
+      "name": "Veap RBAC",
+      "package": "@veap/rbac-plugin",
+      "version": "0.1.0",
+      "category": "security",
+      "type": "plugin",
+      "isNew": false,
+      "featured": true,
+      "status": "official",
+      "hasMigrations": false,
+      "description": "Role-Based Access Control and permission management with dynamic roles, granular permissions, and administrative authorization guards.",
+      "purpose": "Controls user authorization through granular permissions, role hierarchies, route protection middlewares, and UI action gating.",
+      "installation": {
+        "command": "bun veap add @veap/rbac-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/rbac-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "Manage roles and assign permissions in the admin panel"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["panel-plugin", "auth-plugin"],
+        "packages": ["lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Defines default built-in roles: 'admin' and 'user'.",
+        "Allows other plugins to register domain-specific permissions (e.g. 'post:create', 'media:upload').",
+        "Provides `checkSecurity(session, user, roles, permissions)` and `getUserRbacData(userId)` for access control."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/rbac-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport rbacPlugin from \"@veap/rbac-plugin\";\n\nexport const app = Application.configure()\n  .withAuth()\n  .withPlugins([rbacPlugin])\n  .create();\n\n// Checking security and roles in actions or server components:\nimport { checkSecurity, getCurrentSession } from \"@veap/auth/server\";\n\nconst { session, user } = await getCurrentSession();\nconst auth = await checkSecurity(session, user, [\"admin\"], [\"post:update\"]);\nif (!auth.satisfied) {\n  throw new Error(\"Forbidden: insufficient permissions\");\n}"
+    },
+    {
+      "id": "notifications-plugin",
+      "slug": "notifications-plugin",
+      "name": "Veap Notifications",
+      "package": "@veap/notifications-plugin",
+      "version": "0.1.0",
+      "category": "system",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Real-time notification engine supporting in-app notification toasts, persistent inbox, unread counts, and multi-channel delivery.",
+      "purpose": "Enables asynchronous event dispatch to users, admin alerts, unread notification badges, and transactional notification history.",
+      "installation": {
+        "command": "bun veap add @veap/notifications-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/notifications-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "Migrations execute automatically on application startup (`bun dev`)"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["panel-plugin"],
+        "packages": [
+          "date-fns@^4.1.0",
+          "sonner@^2.0.0",
+          "swr@^2.3.0",
+          "lucide-react@^1.27.0"
+        ]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Integrates a notification bell directly into the @veap/panel-plugin header bar.",
+        "Utilizes Sonner to display animated real-time toast notifications in the browser.",
+        "Notifications are persisted in the database and synchronized in real time."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/notifications-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport notificationsPlugin from \"@veap/notifications-plugin\";\n\nexport const app = Application.configure()\n  .withPlugins([notificationsPlugin])\n  .create();\n\n// Dispatching a notification from a server action:\nimport { sendNotification } from \"@veap/notifications-plugin\";\n\nawait sendNotification({\n  userId: \"user-uuid\",\n  title: \"Account Verified\",\n  message: \"Your profile has been successfully approved.\",\n  type: \"success\"\n});"
+    },
+    {
+      "id": "activity-plugin",
+      "slug": "activity-plugin",
+      "name": "Veap Activity Log",
+      "package": "@veap/activity-plugin",
+      "version": "0.1.0",
+      "category": "system",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Audit trail and security activity logging plugin for tracking user mutations, sign-in attempts, and critical data changes.",
+      "purpose": "Records tamper-evident audit logs of user actions, model changes, authentication events, and administrative overrides.",
+      "installation": {
+        "command": "bun veap add @veap/activity-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/activity-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "Migrations execute automatically on application startup (`bun dev`)"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["panel-plugin"],
+        "packages": ["lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Runs in the background via EventBus, listening for system events and model mutations.",
+        "Provides an activity log dashboard view with filtering by date, user, and event type.",
+        "Delivers an audit trail to meet enterprise application compliance and security requirements."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/activity-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport activityPlugin from \"@veap/activity-plugin\";\n\nexport const app = Application.configure()\n  .withPlugins([activityPlugin])\n  .create();\n\n// Recording an audit activity programmatically:\nimport { ActivityLog } from \"@veap/activity-plugin\";\n\nawait ActivityLog.record({\n  userId: \"user-uuid\",\n  action: \"settings:update\",\n  description: \"Updated billing email\",\n  ipAddress: \"127.0.0.1\"\n});"
+    },
+    {
+      "id": "auth-google-plugin",
+      "slug": "auth-google-plugin",
+      "name": "Veap Auth Google",
+      "package": "@veap/auth-google-plugin",
+      "version": "0.1.0",
+      "category": "security",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": false,
+      "description": "OAuth2 Google authentication provider integrating directly into the Veap Auth login screen and identity pipeline.",
+      "purpose": "Adds one-click 'Sign in with Google' authentication using Arctic OAuth2, handling redirect flows, state validation, and account linking.",
+      "installation": {
+        "command": "bun veap add @veap/auth-google-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/auth-google-plugin`",
+          "Configure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in `.env`",
+          "The Google sign-in button automatically renders on the login screen"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["auth-plugin"],
+        "packages": ["arctic@^3.0.0", "lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Requires registering an OAuth application in Google Cloud Console and configuring redirect URI (e.g. /api/auth/google/callback).",
+        "Injects directly into the login form extension point provided by @veap/auth-plugin.",
+        "Uses secure PKCE flow and encrypted session state tokens."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/auth-google-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport authGooglePlugin from \"@veap/auth-google-plugin\";\n\nexport const app = Application.configure()\n  .withAuth()\n  .withPlugins([authGooglePlugin])\n  .create();"
+    },
+    {
+      "id": "auth-passkey-plugin",
+      "slug": "auth-passkey-plugin",
+      "name": "Veap Auth Passkey",
+      "package": "@veap/auth-passkey-plugin",
+      "version": "0.1.0",
+      "category": "security",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Passwordless WebAuthn and Passkey authentication for biometric (Face ID, Touch ID, Windows Hello) and security key sign-in.",
+      "purpose": "Enables FIDO2/WebAuthn passkey registration and authentication using @simplewebauthn, eliminating phishing vectors and passwords.",
+      "installation": {
+        "command": "bun veap add @veap/auth-passkey-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/auth-passkey-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "Migrations execute automatically on application startup (`bun dev`)"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["auth-plugin", "action-confirm-plugin"],
+        "packages": [
+          "@simplewebauthn/browser@^13.0.0",
+          "@simplewebauthn/server@^13.0.0",
+          "zod@^4.4.3"
+        ]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Supports FIDO2 / WebAuthn biometric authenticators: Apple Touch ID / Face ID, Windows Hello, and hardware YubiKeys.",
+        "Stores public credentials associated with user accounts in the passkeys table.",
+        "Provides phishing resistance through strict Relying Party ID (RP ID) domain verification."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/auth-passkey-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport authPasskeyPlugin from \"@veap/auth-passkey-plugin\";\n\nexport const app = Application.configure()\n  .withAuth()\n  .withPlugins([authPasskeyPlugin])\n  .create();"
+    },
+    {
+      "id": "auth-totp-plugin",
+      "slug": "auth-totp-plugin",
+      "name": "Veap Auth TOTP",
+      "package": "@veap/auth-totp-plugin",
+      "version": "0.1.0",
+      "category": "security",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Time-based One-Time Password (TOTP) two-factor authentication plugin compatible with Google Authenticator, Authy, and 1Password.",
+      "purpose": "Provides 2FA enrollment with QR codes, recovery codes, and verification challenges during login for elevated account security.",
+      "installation": {
+        "command": "bun veap add @veap/auth-totp-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/auth-totp-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "Migrations execute automatically on application startup (`bun dev`)"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["auth-plugin", "action-confirm-plugin"],
+        "packages": ["@oslojs/otp@^1.0.0", "lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Generates secure QR codes compatible with Google Authenticator, 1Password, Microsoft Authenticator, etc.",
+        "Requires entering a 6-digit verification code during sign-in when two-factor authentication is active.",
+        "Generates single-use recovery codes in case the user loses access to their authenticator device."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/auth-totp-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport authTotpPlugin from \"@veap/auth-totp-plugin\";\n\nexport const app = Application.configure()\n  .withAuth()\n  .withPlugins([authTotpPlugin])\n  .create();"
+    },
+    {
+      "id": "action-confirm-plugin",
+      "slug": "action-confirm-plugin",
+      "name": "Veap Action Confirm",
+      "package": "@veap/action-confirm-plugin",
+      "version": "0.1.0",
+      "category": "admin",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": false,
+      "description": "Password re-confirmation and biometric step-up authentication modal for protecting sensitive admin operations.",
+      "purpose": "Safeguards destructive or critical administrative actions (e.g. deleting users, revoking API keys) by requiring fresh authentication before execution.",
+      "installation": {
+        "command": "bun veap add @veap/action-confirm-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/action-confirm-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "Ready to use across panel dialogs and sensitive action handlers"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["panel-plugin"],
+        "packages": ["sonner@^2.0.0", "lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Injects a password confirmation modal into the post-content UI extension point.",
+        "Securely caches authorization for a brief duration (e.g. 5 minutes) for a smooth administrative UX.",
+        "Compatible with biometric Passkeys for confirmation without re-typing passwords."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/action-confirm-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport actionConfirmPlugin from \"@veap/action-confirm-plugin\";\n\nexport const app = Application.configure()\n  .withPlugins([actionConfirmPlugin])\n  .create();"
+    },
+    {
+      "id": "devtools-plugin",
+      "slug": "devtools-plugin",
+      "name": "Veap DevTools",
+      "package": "@veap/devtools-plugin",
+      "version": "0.1.0",
+      "category": "dev",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": false,
+      "description": "In-browser developer diagnostics toolbar displaying database queries, memory consumption, route execution time, and system metrics.",
+      "purpose": "Provides development telemetry and environment insights using systeminformation directly on screen during local development.",
+      "installation": {
+        "command": "bun veap add @veap/devtools-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/devtools-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "The DevTools indicator automatically attaches to the bottom of the screen in development mode"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["panel-plugin"],
+        "packages": ["systeminformation@^5.23.0", "lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Should only be registered in development environments (`process.env.NODE_ENV === 'development'`).",
+        "Displays SQL query execution times and query count per request.",
+        "Provides real-time visibility into Node.js/Bun process RAM usage and database connection pool status."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/devtools-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport devtoolsPlugin from \"@veap/devtools-plugin\";\n\nexport const app = Application.configure()\n  .withPlugins([\n    ...(process.env.NODE_ENV === \"development\" ? [devtoolsPlugin] : [])\n  ])\n  .create();"
+    },
+    {
+      "id": "installer-plugin",
+      "slug": "installer-plugin",
+      "name": "Veap Setup Wizard",
+      "package": "@veap/installer-plugin",
+      "version": "0.1.0",
+      "category": "system",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": false,
+      "description": "Interactive web-based setup wizard for first-time application configuration, database connection testing, and root admin creation.",
+      "purpose": "Listens for 'system:not-installed' events and automatically redirects unconfigured visits to /install until setup is completed.",
+      "installation": {
+        "command": "bun veap add @veap/installer-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/installer-plugin`",
+          "Auto-registered in `lib/plugins.gen.ts`",
+          "Boot your application and navigate to /install"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["auth-plugin", "panel-plugin"],
+        "packages": [
+          "react-hook-form@^7.54.0",
+          "zod@^4.4.3",
+          "lucide-react@^1.27.0"
+        ]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Automatically redirects visitors to the `/install` setup wizard if no administrator account exists.",
+        "Guides through configuring encryption keys, database connections, and running initial migrations.",
+        "Automatically locks itself after successful installation to prevent unauthorized re-execution."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/installer-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport installerPlugin from \"@veap/installer-plugin\";\n\nexport const app = Application.configure()\n  .withPlugins([installerPlugin])\n  .create();"
+    },
+    {
+      "id": "vercel-blob-plugin",
+      "slug": "vercel-blob-plugin",
+      "name": "Veap Vercel Blob Storage",
+      "package": "@veap/vercel-blob-plugin",
+      "version": "0.1.0",
+      "category": "media",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": false,
+      "description": "High-performance cloud object storage driver powered by Vercel Blob, seamlessly integrating with Veap's StorageService.",
+      "purpose": "Registers VercelBlobProvider into StorageService, enabling serverless and edge-compatible asset uploads directly to Vercel Blob storage.",
+      "installation": {
+        "command": "bun veap add @veap/vercel-blob-plugin",
+        "steps": [
+          "Install package via Veap CLI: `bun veap add @veap/vercel-blob-plugin`",
+          "Configure BLOB_READ_WRITE_TOKEN in your `.env` file",
+          "The plugin automatically registers VercelBlobProvider as the active storage driver"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["media-plugin"],
+        "packages": ["@vercel/blob@^0.27.0", "lucide-react@^1.27.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Requires the `BLOB_READ_WRITE_TOKEN` environment variable from your Vercel project dashboard.",
+        "Replaces the LocalStorageProvider in StorageService with serverless cloud object storage on Vercel.",
+        "Fully compatible with @veap/media-plugin for direct asset and media uploads."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/plugins/vercel-blob-plugin",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// lib/veap.ts\nimport { Application } from \"@veap/kernel\";\nimport vercelBlobPlugin from \"@veap/vercel-blob-plugin\";\n\nexport const app = Application.configure()\n  .withStorage()\n  .withPlugins([vercelBlobPlugin])\n  .create();"
+    },
+    {
+      "id": "categorizable",
+      "slug": "categorizable",
+      "name": "Veap Categorizable",
+      "package": "@veap/categorizable",
+      "version": "0.1.0",
+      "category": "orm",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Polymorphic categorization trait for Veap Models with category hierarchies, slug resolution, and multilingual category support.",
+      "purpose": "Adds polymorphic morphToMany category relations, query scopes (whereCategory, whereInCategories), and automatic slug lookups to any Model.",
+      "installation": {
+        "command": "bun add @veap/categorizable",
+        "steps": [
+          "Install package via package manager: `bun add @veap/categorizable`",
+          "Migrations execute automatically on application startup (`bun dev`)",
+          "Apply the Categorizable mixin to your domain Model"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["translatable"],
+        "packages": ["@faker-js/faker@^9.4.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Uses a polymorphic `morphToMany` relation with the `categorizables` table.",
+        "Provides query scopes: `whereCategory('tech')` and `whereInCategories(['tech', 'design'])`.",
+        "Supports automated category name translations when integrated with @veap/translatable."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/packages/veap-categorizable",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// models/Article.ts\nimport { Model } from \"@veap/database\";\nimport { Categorizable } from \"@veap/categorizable\";\n\nexport class Article extends Categorizable(Model) {\n  static table = \"articles\";\n}\n\n// Querying with category scopes:\nconst articles = await Article.query()\n  .whereCategory(\"technology\")\n  .withCategories()\n  .get();"
+    },
+    {
+      "id": "commentable",
+      "slug": "commentable",
+      "name": "Veap Commentable",
+      "package": "@veap/commentable",
+      "version": "0.1.0",
+      "category": "orm",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Polymorphic commenting trait for Veap Models with nested comment threads, status moderation, and author associations.",
+      "purpose": "Attaches threaded comments and replies to any database model using Veap's polymorphic morphMany relation, complete with moderation states.",
+      "installation": {
+        "command": "bun add @veap/commentable",
+        "steps": [
+          "Install package via package manager: `bun add @veap/commentable`",
+          "Migrations execute automatically on application startup (`bun dev`)",
+          "Apply the Commentable mixin to your domain Model"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": [],
+        "packages": ["@faker-js/faker@^9.4.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Supports nested multi-level threaded comments via the `parent_id` column in the `comments` table.",
+        "Includes built-in moderation status flags ('pending', 'approved', 'spam').",
+        "Provides convenience helper methods: `addComment({ content, authorName })` and `approvedComments()`."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/packages/veap-commentable",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// models/Post.ts\nimport { Model } from \"@veap/database\";\nimport { Commentable } from \"@veap/commentable\";\n\nexport class Post extends Commentable(Model) {\n  static table = \"posts\";\n}\n\n// Adding and querying comments:\nconst post = await Post.find(\"post-uuid\");\nawait post.addComment({\n  content: \"Excellent article!\",\n  authorName: \"Alice\",\n  status: \"approved\"\n});"
+    },
+    {
+      "id": "taggable",
+      "slug": "taggable",
+      "name": "Veap Taggable",
+      "package": "@veap/taggable",
+      "version": "0.1.0",
+      "category": "orm",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Polymorphic tagging trait for Veap Models with slugification, multilingual tag names, and tag-based filtering scopes.",
+      "purpose": "Enables attaching multiple tags to any model through polymorphic relations, supporting tag cloud generation and quick querying.",
+      "installation": {
+        "command": "bun add @veap/taggable",
+        "steps": [
+          "Install package via package manager: `bun add @veap/taggable`",
+          "Migrations execute automatically on application startup (`bun dev`)",
+          "Apply the Taggable mixin to your domain Model"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": ["translatable"],
+        "packages": ["@faker-js/faker@^9.4.0"]
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Polymorphic `morphToMany` relation with the central `taggables` table.",
+        "Provides `syncTags(['react', 'nextjs'])` and `attachTags(['new-tag'])` methods.",
+        "Supports automated querying and filtering via `whereTag('react')`."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/packages/veap-taggable",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// models/Product.ts\nimport { Model } from \"@veap/database\";\nimport { Taggable } from \"@veap/taggable\";\n\nexport class Product extends Taggable(Model) {\n  static table = \"products\";\n}\n\n// Attaching tags and querying:\nconst product = await Product.find(\"product-uuid\");\nawait product.syncTags([\"nextjs\", \"framework\", \"typescript\"]);\n\nconst taggedProducts = await Product.query()\n  .whereTag(\"nextjs\")\n  .withTags()\n  .get();"
+    },
+    {
+      "id": "translatable",
+      "slug": "translatable",
+      "name": "Veap Translatable",
+      "package": "@veap/translatable",
+      "version": "0.1.0",
+      "category": "orm",
+      "type": "plugin",
+      "isNew": false,
+      "featured": false,
+      "status": "official",
+      "hasMigrations": true,
+      "description": "Database translation engine and model trait providing seamless field-level multilingual translations via polymorphic storage.",
+      "purpose": "Translates specified model attributes across multiple locales dynamically with fallback support, without altering the underlying table schema.",
+      "installation": {
+        "command": "bun add @veap/translatable",
+        "steps": [
+          "Install package via package manager: `bun add @veap/translatable`",
+          "Migrations execute automatically on application startup (`bun dev`)",
+          "Extend TranslatableModel or apply the Translatable mixin on your Model"
+        ]
+      },
+      "dependencies": {
+        "core": "^0.1.0",
+        "veap": [],
+        "packages": []
+      },
+      "authors": [
+        {
+          "name": "Veap Core Team",
+          "role": "Maintainer",
+          "url": "https://github.com/veapjs"
+        }
+      ],
+      "license": "MIT",
+      "keepInMind": [
+        "Translatable attributes are declared as an array on the model: `static translatable = ['title', 'content']`.",
+        "Supports retrieving localized values for a specific locale with automatic fallback to the default locale.",
+        "Stores translation values in a central polymorphic `translations` table via `morphMany`."
+      ],
+      "contact": {
+        "repository": "https://github.com/veapjs/veap/tree/main/packages/veap-translatable",
+        "issues": "https://github.com/veapjs/veap/issues"
+      },
+      "usage": "// models/Page.ts\nimport { TranslatableModel } from \"@veap/translatable\";\n\nexport class Page extends TranslatableModel {\n  static table = \"pages\";\n  static translatable = [\"title\", \"content\", \"meta_description\"];\n}\n\n// Storing and retrieving translations:\nconst page = await Page.find(\"page-uuid\");\npage.setTranslation(\"title\", \"es\", \"Página Principal\");\npage.setTranslation(\"title\", \"en\", \"Home Page\");\nawait page.save();"
+    }
+  ]
+}
