@@ -4,10 +4,10 @@ This file is a guide for coding agents (and human contributors) working across t
 
 ## Repo layout
 
-- `apps/` — Applications. Key apps include `01-base`, `03-rest-api`, `04-blog`, `05_fullstack` (example apps), and `veap-docs` (the documentation website).
+- `apps/` — Applications: `01-basic` (reference Next.js App Router app) and `veap-docs` (the documentation website).
 - `packages/` — Shared framework packages, including `kernel`, `database`, `auth`, `plugins`, `intl`, `mail`, `settings`, `storage`, `ui`, `create-veap`, and ORM traits.
-- `plugins/` — Veap plugins and modular traits such as `blog-plugin`, `action-confirm-plugin`, `installer-plugin`, `media-plugin`, `panel-plugin`.
-- `templates/` — Scaffold templates used by `create-veap`.
+- `plugins/` — Directory for local plugins and ejected modules (`veap eject`).
+- `templates/` — Scaffold templates used by `create-veap` (`01-basic`, `02-hono`).
 - `docs/` — Documentation sources:
   - `docs/developer-docs/` — Public user and developer guides, tutorials, and API references (rendered at [veap.pl/docs](https://veap.pl/docs)).
   - `docs/maintainer-notes/` — Technical architecture, package authoring guidelines, and CI/CD release runbooks.

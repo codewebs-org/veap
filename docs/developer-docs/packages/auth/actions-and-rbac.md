@@ -62,6 +62,35 @@ mobile applications and external API clients, extract `result.data.token` and
 store it securely on the device, then pass it in the `Authorization` header
 (`Authorization: Bearer <token>`) on subsequent requests.
 
+### Authenticating API routes with Bearer tokens
+
+`getCurrentSession()` automatically inspects the `Authorization: Bearer <token>` header before falling back to cookies:
+
+```ts
+// app/api/me/route.ts
+import { NextResponse } from "next/server";
+import { getCurrentSession } from "@veap/auth";
+import { initializeSystem } from "@/lib/veap";
+
+export async function GET() {
+  await initializeSystem();
+
+  const { user, session } = await getCurrentSession();
+  if (!user || !session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  return NextResponse.json({
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      roles: user.roles?.map((r) => r.name) ?? [],
+    },
+  });
+}
+```
+
 ## Role-Based Access Control (RBAC)
 
 `@veap/auth/models` provides `User`, `Role`, and `Permission` Active Record models linked by many-to-many pivot tables (`user_roles` and `role_permissions`). You can also use the RBAC Server Actions (`assignRoleToUser`, `assignPermissionToRole`, `createRole`, `createPermission`) from `@veap/auth`:

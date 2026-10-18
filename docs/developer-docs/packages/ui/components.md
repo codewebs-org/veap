@@ -41,4 +41,4 @@ For granular imports, reference `@veap/ui/components/<name>` directly:
 - `@veap/ui/components/dialog`, `@veap/ui/components/sheet`, `@veap/ui/components/dropdown-menu`
 - `@veap/ui/components/table`, `@veap/ui/components/tabs`, `@veap/ui/components/badge`
 - `@veap/ui/components/sonner` (`Toaster` component for toast notifications)
-- `@veap/ui/components/icon` (`Icon` component wrapping Iconify and Lucide icons)
+- `@veap/ui/components/spinner`, `@veap/ui/components/separator`, `@veap/ui/components/alert`

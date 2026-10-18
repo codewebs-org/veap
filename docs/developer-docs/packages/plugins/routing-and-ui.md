@@ -34,6 +34,78 @@ export async function AdminDashboardLayout({
 }
 ```
 
+### Client-side widgets and interactive extension points
+
+In interactive Client Components (`"use client"`), import `<ExtensionPointClient>` and `<WidgetAreaClient>` from `@veap/plugins/client`:
+
+```tsx
+"use client";
+
+import { ExtensionPointClient, WidgetAreaClient } from "@veap/plugins/client";
+
+export function ClientDashboard() {
+  return (
+    <div>
+      <ExtensionPointClient target="user:profile" point="actions" />
+      <WidgetAreaClient area="user:stats" />
+    </div>
+  );
+}
+```
+
+### Dynamic breadcrumbs (`getPluginBreadcrumbs`)
+
+The plugin router automatically generates breadcrumb hierarchies by traversing route nodes and navigation definitions:
+
+```tsx
+import { getPluginBreadcrumbs } from "@veap/plugins";
+
+export default async function BreadcrumbsBar({ path }: { path: string }) {
+  const crumbs = await getPluginBreadcrumbs(path);
+
+  return (
+    <nav className="flex space-x-2 text-sm text-muted-foreground">
+      {crumbs.map((crumb, idx) => (
+        <span key={idx}>
+          {crumb.url ? <a href={crumb.url}>{crumb.label}</a> : crumb.label}
+          {idx < crumbs.length - 1 && " / "}
+        </span>
+      ))}
+    </nav>
+  );
+}
+```
+
+### Confirming sensitive actions (`useConfirmAction`)
+
+The `useConfirmAction()` hook from `@veap/plugins/client` provides a standard confirmation prompt before executing high-risk Server Actions (such as deleting databases or revoking tokens):
+
+```tsx
+"use client";
+
+import { useConfirmAction } from "@veap/plugins/client";
+import { deleteWorkspaceAction } from "@/app/actions/workspace";
+
+export function DeleteWorkspaceButton({ id }: { id: string }) {
+  const confirm = useConfirmAction();
+
+  const handleDelete = async () => {
+    const result = await confirm({
+      title: "Delete Workspace",
+      description: "This will permanently delete all records. Are you sure?",
+    });
+
+    if (result.confirmed) {
+      await deleteWorkspaceAction(id);
+    }
+  };
+
+  return <button onClick={handleDelete}>Delete Workspace</button>;
+}
+```
+
+If `@veap/action-confirm-plugin` is enabled, it presents a modal password/biometric challenge. If the plugin is disabled, it falls back to native browser confirmation.
+
 ## Managing plugins from the CLI
 
 `PluginsServiceProvider` registers six CLI commands in `@veap/kernel/cli` for managing plugins and regenerating `lib/plugins.gen.ts`:

@@ -14,7 +14,7 @@
 | `@veap/ui/logo` | `Logo` vector component with theme-aware variants. |
 | `@veap/ui/shared/*` | Shared layout feedback components (`@veap/ui/shared/page-loader`, `@veap/ui/shared/access-denied`, `@veap/ui/shared/scroll-fade-effect`). |
 | `@veap/ui/components/*` | Direct imports for individual components (such as `@veap/ui/components/button`, `@veap/ui/components/dialog`, `@veap/ui/components/sonner`). |
-| `@veap/ui/lib/utils` | `cn(...inputs)` utility combining `clsx` and `tailwind-merge`. |
+| `@veap/ui/mdx` | Markdown and MDX component overrides (`useMDXComponents`). |
 
 ## Component catalog
 

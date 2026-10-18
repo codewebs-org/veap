@@ -203,5 +203,5 @@ In continuous deployment pipelines where old and new container instances run sim
 Deploy your Veap container image or repository to modern hosting platforms:
 
 - **Coolify / Railway / Render**: Connect your Git repository, configure environment variables (`DATABASE_URL`, `ENCRYPTION_KEY`, `NODE_ENV=production`), set the build command to `bun install && bun run build`, and start command to `node .next/standalone/server.js` or `bun run start`.
-- **Vercel**: Deploy directly using the official Next.js integration. Managed PostgreSQL databases (such as Neon, Supabase, or AWS RDS) must use connection pooler endpoints (such as `sslmode=require`) to prevent connection exhaustion.
+- **Vercel**: Deploy directly using the official Next.js integration. Because serverless runtimes have a read-only root filesystem (`/var/task`), `@veap/database` redirects SQLite database files to `/tmp/veap.sqlite`. Because `/tmp` on serverless functions is ephemeral and reset between cold starts, configure a persistent PostgreSQL database (such as Neon, Supabase, or AWS RDS) using connection pooler endpoints (with `sslmode=require`) to prevent connection exhaustion.
 - **Ubuntu VPS with PM2 and Nginx**: Run your standalone application using PM2 (`pm2 start server.js --name my-app`) behind an Nginx reverse proxy with automated Let's Encrypt SSL certificates.

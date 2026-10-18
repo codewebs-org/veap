@@ -162,6 +162,54 @@ Article.addGlobalScope("publishedOnly", (builder) => {
 });
 ```
 
+### Local query scopes
+
+Local scopes allow you to define common, reusable sets of query constraints directly on your model class. Define methods prefixed with `scope`:
+
+```ts
+import { Model, type QueryBuilder } from "@veap/database";
+
+export class Article extends Model {
+  static override table = "articles";
+
+  // Define local scopes with the scope prefix
+  static scopeActive(query: QueryBuilder<Article>): QueryBuilder<Article> {
+    return query.where("is_published", true);
+  }
+
+  static scopePopular(
+    query: QueryBuilder<Article>,
+    minViews = 1000,
+  ): QueryBuilder<Article> {
+    return query.where("views_count", ">=", minViews);
+  }
+
+  static scopeCategory(
+    query: QueryBuilder<Article>,
+    categoryId: number,
+  ): QueryBuilder<Article> {
+    return query.where("category_id", categoryId);
+  }
+}
+```
+
+You can invoke local scopes dynamically on `Model.query()` by calling the method name without the `scope` prefix, or explicitly via `.scope(name, ...args)`:
+
+```ts
+// Dynamic invocation via Proxy dispatch
+const trending = await Article.query()
+  .active()
+  .popular(5000)
+  .orderBy("created_at", "desc")
+  .get();
+
+// Explicit invocation via .scope()
+const categoryArticles = await Article.query()
+  .scope("active")
+  .scope("category", 4)
+  .get();
+```
+
 ## Eager loading and preventing N+1 queries (`.with`)
 
 When rendering lists of models and their associated relations, lazy loading each relation inside a loop triggers the N+1 query problem. Use `.with()` to eager load relations in bulk queries:

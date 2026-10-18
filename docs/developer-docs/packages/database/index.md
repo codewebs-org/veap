@@ -31,7 +31,25 @@ When `DATABASE_URL` points to a PostgreSQL instance in production (`NODE_ENV ===
 - `DATABASE_SSL_REJECT_UNAUTHORIZED`: Set to `"false"` when connecting to managed PostgreSQL providers with self-signed certificates.
 - `DATABASE_SSL_CA`: Provide a custom PEM-encoded CA certificate string for strict verification.
 
-## Next steps
+## SQLite on serverless platforms (Vercel and AWS Lambda)
+
+When deploying to serverless platforms such as Vercel or AWS Lambda, the root deployment directory (`/var/task`) is read-only. `@veap/database` automatically detects serverless environments (`VERCEL === "1"` or `AWS_LAMBDA_FUNCTION_NAME`) and redirects relative SQLite file paths to the writable `/tmp` directory (for example, `/tmp/veap.sqlite`).
+
+<!-- prettier-ignore -->
+> [!WARNING]
+> Storage on serverless functions is ephemeral and wiped across function cold starts. For persistent production deployments on serverless platforms, configure a PostgreSQL database URL in your environment variables.
+
+## Checking database initialization
+
+Use `isDatabaseInitialized()` to check whether the global Knex instance or an active transaction is ready:
+
+```ts
+import { isDatabaseInitialized } from "@veap/database";
+
+if (isDatabaseInitialized()) {
+  // Safe to query models
+}
+```
 
 Continue exploring `@veap/database` features:
 

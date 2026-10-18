@@ -14,10 +14,7 @@ official plugins, scaffolding templates, and documentation.
 ```
 veap-repo/
 ├── apps/                    # Applications and documentation site
-│   ├── 01-base/             # Reference implementation with Next.js App Router
-│   ├── 03-rest-api/         # REST API reference application
-│   ├── 04-blog/             # Blog example showcasing ORM traits and plugins
-│   ├── 05_fullstack/        # Full-stack example with authentication and i18n
+│   ├── 01-basic/            # Reference implementation with Next.js App Router
 │   └── veap-docs/           # Next.js documentation site (veap.pl)
 ├── packages/                # Core framework packages (published to npm)
 │   ├── kernel/              # Lifecycle, IoC container, events, cache, config, HTTP
@@ -31,8 +28,8 @@ veap-repo/
 │   ├── ui/                  # Shared React UI components and Tailwind theme
 │   ├── create-veap/         # Application scaffolder CLI (`bun create veap`)
 │   └── veap-*/              # Specialized ORM traits (categorizable, commentable, etc.)
-├── plugins/                 # Official modular plugins (for example, blog, auth-totp, panel)
-├── templates/               # Starters used by `create-veap`
+├── plugins/                 # Local workspace plugins and ejected packages (`veap eject`)
+├── templates/               # Starters used by `create-veap` (`01-basic`, `02-hono`)
 └── docs/                    # Documentation sources
     ├── developer-docs/      # Application developer documentation
     └── maintainer-notes/    # Maintainer guidelines and technical architecture
@@ -94,8 +91,8 @@ flowchart TD
   end
 
   subgraph Layer6["Layer 6: Applications & Plugins"]
-    AppPlugins["plugins/* (blog, panel, auth-totp)"]
-    Apps["apps/* (01-base, 04-blog)"]
+    AppPlugins["plugins/* (ejected or local plugins)"]
+    Apps["apps/* (01-basic, veap-docs)"]
   end
 
   Kernel --> Database

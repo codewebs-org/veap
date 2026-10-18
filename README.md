@@ -52,10 +52,10 @@ bun dev
 
 - `apps/` — Applications:
   - `apps/veap-docs` — Official documentation site ([veap.pl/docs](https://veap.pl/docs)).
-  - `apps/01-base`, `apps/03-rest-api`, `apps/04-blog`, `apps/05_fullstack` — Reference example applications.
+  - `apps/01-basic` — Reference Next.js App Router application demonstrating Veap integration.
 - `packages/` — Shared framework packages (`@veap/kernel`, `@veap/database`, `@veap/auth`, etc.).
-- `plugins/` — Plugins and modular traits (`blog-plugin`, `media-plugin`, `panel-plugin`, etc.).
-- `templates/` — Starter project templates consumed by `create-veap`.
+- `plugins/` — Directory for local plugins and ejected workspace modules.
+- `templates/` — Starter project templates consumed by `create-veap` (`01-basic`, `02-hono`).
 - `docs/` — Documentation sources:
   - `docs/developer-docs/` — Public developer guides, tutorials, and API references.
   - `docs/maintainer-notes/` — Architecture design, package authoring guidelines, and CI/CD release runbooks.
