@@ -209,10 +209,7 @@ bun run check:types
 bun run test
 
 # 5. Validate documentation links and navigation metadata
-node docs/scripts/check-docs.mjs
-
-# 6. Verify ecosystem generated snapshot
-node apps/veap-docs/scripts/generate-ecosystem.mjs --check
+bun run check:docs
 ```
 
 If any check in this pipeline fails, fix the issue locally before committing.

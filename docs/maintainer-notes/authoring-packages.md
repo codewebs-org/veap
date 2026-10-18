@@ -45,7 +45,7 @@ Here is an annotated template for a Veap package manifest:
 ```json
 {
   "name": "@veap/my-service",
-  "version": "0.1.7",
+  "version": "0.1.10",
   "description": "My custom domain service for the Veap framework",
   "repository": {
     "type": "git",
@@ -77,10 +77,10 @@ Here is an annotated template for a Veap package manifest:
     "test": "vitest run"
   },
   "dependencies": {
-    "@veap/kernel": "0.2.0"
+    "@veap/kernel": "^0.2.2"
   },
   "peerDependencies": {
-    "@veap/ui": "^0.1.2"
+    "@veap/ui": "^0.1.4"
   },
   "peerDependenciesMeta": {
     "@veap/ui": {
@@ -99,9 +99,9 @@ Here is an annotated template for a Veap package manifest:
 ### Critical rules for `dependencies`
 - **Never use `workspace:*` in published packages:** The automated release
   workflow forbids `workspace:*` ranges before publishing to npm. Use the
-  monorepo's current version (for example, `"0.1.7"`).
+  monorepo's current version (for example, `"0.1.10"`).
 - **Align internal `@veap/*` versions:** Ensure all internal `@veap/*` dependencies
-  match the exact workspace version (`0.1.7`) to avoid duplicate package
+  match the exact workspace version (`0.1.10`) to avoid duplicate package
   resolution and lockfile corruption during `bun install`.
 
 ---
@@ -241,18 +241,21 @@ Follow these steps when adding a new package to the monorepo:
 3. **Implement service:** Write domain implementations adhering to ports.
 4. **Create `ServiceProvider`:** Wire dependencies in `register()` and `boot()`.
 5. **Configure `package.json`:**
-   - Set `"version": "0.1.7"` matching existing packages.
+   - Set `"version": "0.1.10"` matching existing feature packages.
    - Configure subpath `"exports"`.
-   - Use `"dependencies": { "@veap/kernel": "^0.2.0" }`.
+   - Use `"dependencies": { "@veap/kernel": "^0.2.2" }`.
 6. **Write unit and integration tests:** Verify service logic and container
    resolution using in-memory doubles.
-7. **Register in ecosystem metadata:**
-   - Add curated facts for the new package in
-     `apps/veap-docs/scripts/generate-ecosystem.mjs` under `CURATED`.
-   - Run `node apps/veap-docs/scripts/generate-ecosystem.mjs` to regenerate
-     `apps/veap-docs/lib/ecosystem.generated.json`.
+7. **Register package documentation and metadata:**
+   - Add package documentation in `docs/developer-docs/packages/<name>/` and
+     register the page in `meta.json`.
+   - Add an API reference page in `docs/developer-docs/reference/packages/<name>.md`.
+   - Update `docs/developer-docs/source-map.json` and `apps/veap-docs/veap-registry.json`
+     if applicable.
 8. **Run verification checks:**
    - `bun run build` (all packages compile without errors)
    - `bun run check:write` (Biome formatting passes)
+   - `bun run check:arch` (architectural boundary invariants hold)
+   - `bun run check:types` (type-checking passes across workspaces)
    - `bun run test` (all test suites pass)
-   - `node docs/scripts/check-docs.mjs` (documentation links valid)
+   - `bun run check:docs` (documentation links and navigation valid)

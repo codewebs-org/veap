@@ -45,8 +45,8 @@ bun dev
 | Check formatting and linter (Biome) | `bun run check` |
 | Fix formatting automatically (Biome) | `bun run check:write` |
 | Type-check the workspace | `bun run check:types` |
-| Validate documentation links & navigation | `node docs/scripts/check-docs.mjs` |
-| Check ecosystem snapshot | `node apps/veap-docs/scripts/generate-ecosystem.mjs --check` |
+| Check architectural boundary invariants | `bun run check:arch` |
+| Validate documentation links & navigation | `bun run check:docs` |
 
 ## Repository structure
 

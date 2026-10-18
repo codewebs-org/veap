@@ -172,7 +172,7 @@ For full guides and relational modeling patterns, visit:
 
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-database](https://github.com/veapjs/veap-database)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/database](https://github.com/veapjs/veap/tree/main/packages/database)
 
 ## License
 

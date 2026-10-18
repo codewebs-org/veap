@@ -126,7 +126,7 @@ The package provides organized entry points:
 For full guides, live examples, and framework integration patterns, visit:
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-ui](https://github.com/veapjs/veap-ui)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/ui](https://github.com/veapjs/veap/tree/main/packages/ui)
 
 ## License
 

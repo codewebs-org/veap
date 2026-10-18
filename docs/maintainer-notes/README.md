@@ -47,6 +47,5 @@ Every contributor working on the monorepo must observe these invariants:
 5. **Private packages remain private:** Packages or plugins with `"private": true`
    are ignored by the release pipeline and must never be pushed to npm.
 6. **Ecosystem registry synchrony:** When modifying package manifests, entry
-   points, or dependencies, always update `veap-registry.json` and regenerate
-   `apps/veap-docs/lib/ecosystem.generated.json` using
-   `node apps/veap-docs/scripts/generate-ecosystem.mjs`.
+   points, or dependencies, always update `apps/veap-docs/veap-registry.json` and
+   verify package boundaries with `bun run check:arch`.

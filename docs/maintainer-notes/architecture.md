@@ -38,23 +38,23 @@ veap-repo/
     └── maintainer-notes/    # Maintainer guidelines and technical architecture
 ```
 
-### Git submodules and Bun workspaces
+### Unified monorepo and Bun workspaces
 
-The core packages under `packages/*` and `plugins/*` originated as independent
-repositories under the `veapjs` GitHub organization. In this monorepo:
+The core packages under `packages/*`, official plugins under `plugins/*`, and
+example applications under `apps/*` are unified directly within this repository
+and managed as **Bun workspaces** in root `package.json`:
 
-- They are configured as **Git submodules** via `.gitmodules`.
-- They are simultaneously registered as **Bun workspaces** in root `package.json`:
-  ```json
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "plugins/*",
-    "templates/*"
-  ]
-  ```
-- Bun creates symlinks in `node_modules` resolving local workspace dependencies
-  instantly without requiring local package builds or npm registry round-trips.
+```json
+"workspaces": [
+  "apps/*",
+  "packages/*",
+  "plugins/*",
+  "templates/*"
+]
+```
+
+Bun creates symlinks in `node_modules` resolving local workspace dependencies
+instantly without requiring continuous npm registry round-trips.
 
 ---
 

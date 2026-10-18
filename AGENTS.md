@@ -72,6 +72,6 @@ New Veap applications are scaffolded with `create-veap`. The package source live
 ## If something fails
 
 - If a command complains about missing types or packages, try `bun install` first.
-- If a file is unexpectedly empty or missing, check whether it is supposed to be generated (for example `ecosystem.generated.json`) and regenerate it.
+- If a command complains about missing types or build artifacts, run `bun run build:packages` to emit declaration files.
 - If documentation checks fail after moving files, update the relative links and the corresponding `meta.json` navigation file.
-- When a change touches multiple areas, run the checks in order: format (`check:write`), typecheck (`check:types`), tests (`test`), then documentation checks (`check-docs.mjs`).
+- When a change touches multiple areas, run the checks in order: format (`check:write`), architecture (`check:arch`), typecheck (`check:types`), tests (`test`), then documentation checks (`check:docs`).

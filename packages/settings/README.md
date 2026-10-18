@@ -109,7 +109,7 @@ For full guides and settings caching options, visit:
 
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-settings](https://github.com/veapjs/veap-settings)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/settings](https://github.com/veapjs/veap/tree/main/packages/settings)
 
 ## License
 

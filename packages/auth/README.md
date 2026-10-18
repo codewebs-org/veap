@@ -167,7 +167,7 @@ For full guides and authentication customization, visit:
 
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-auth](https://github.com/veapjs/veap-auth)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/auth](https://github.com/veapjs/veap/tree/main/packages/auth)
 
 ## License
 

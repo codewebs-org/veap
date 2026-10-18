@@ -121,7 +121,7 @@ For full guides and transport configuration options, visit:
 
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-mail](https://github.com/veapjs/veap-mail)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/mail](https://github.com/veapjs/veap/tree/main/packages/mail)
 
 ## License
 

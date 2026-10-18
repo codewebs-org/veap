@@ -45,13 +45,15 @@ If you are developing new `@veap/*` framework packages, contributing official pl
 
 Markdown files in `docs/developer-docs/` are continuously verified by automated scripts:
 
-- **Link and navigation validation:** Checks all relative links, anchor fragments, and `meta.json` navigation entries:
+- **Link and navigation validation:** Checks all relative links, anchor
+  fragments, and `meta.json` navigation entries:
   ```bash
-  node docs/scripts/check-docs.mjs
+  bun run check:docs
   ```
-- **Ecosystem snapshot verification:** Validates that `apps/veap-docs/lib/ecosystem.generated.json` matches all package manifests and `veap-registry.json`:
+- **Architectural boundary verification:** Validates unidirectional package
+  dependencies and boundary invariants across the monorepo:
   ```bash
-  node apps/veap-docs/scripts/generate-ecosystem.mjs --check
+  bun run check:arch
   ```
 - **Formatting and linting:** Formats all documentation and code samples using Biome:
   ```bash

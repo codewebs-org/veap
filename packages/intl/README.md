@@ -130,7 +130,7 @@ For full guides and ICU translation formatting options, visit:
 
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-intl](https://github.com/veapjs/veap-intl)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/intl](https://github.com/veapjs/veap/tree/main/packages/intl)
 
 ## License
 

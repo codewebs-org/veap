@@ -133,7 +133,7 @@ For full guides and storage driver configuration, visit:
 
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-storage](https://github.com/veapjs/veap-storage)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/storage](https://github.com/veapjs/veap/tree/main/packages/storage)
 
 ## License
 

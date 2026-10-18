@@ -69,7 +69,7 @@ When framework packages (`@veap/kernel`, `@veap/database`, `@veap/auth`, etc.) r
 ```json
 {
   "dependencies": {
-    "@veap/kernel": "^0.2.0",
+    "@veap/kernel": "^0.2.2",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"

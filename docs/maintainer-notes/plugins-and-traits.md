@@ -119,10 +119,12 @@ Official and community plugins are registered in `veap-registry.json` at the roo
 }
 ```
 
-The script `apps/veap-docs/scripts/generate-ecosystem.mjs` consumes this file and validates that:
-1. Every plugin listed has an existing documentation page.
-2. Every ejected plugin path exists in the repository.
-3. Every declared package dependency resolves.
+This registry file is the source of truth for official plugins and modular
+traits across the ecosystem. It is consumed by:
+1. The documentation website (`apps/veap-docs`) to power the marketplace and
+   plugin catalog.
+2. Commitlint tooling (`commitlint.config.mjs`) to resolve valid commit scopes.
+3. Continuous integration workflows to discover plugin workspaces.
 
 ## Polymorphic ORM traits
 

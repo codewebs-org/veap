@@ -11,6 +11,7 @@
     "check": "biome check .",
     "check:write": "biome check --write .",
     "check:arch": "node scripts/check-arch.mjs",
+    "check:docs": "node docs/scripts/check-docs.mjs",
     "check:types": "node scripts/check-types.mjs",
     "test": "bun --filter './packages/**' --filter './apps/**' test",
     "changeset": "changeset",

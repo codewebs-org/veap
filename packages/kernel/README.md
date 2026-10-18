@@ -187,7 +187,7 @@ For full guides and framework architecture patterns, visit:
 
 - **Official Website**: [https://veap.pl](https://veap.pl)
 - **Documentation**: [https://veap.pl/docs](https://veap.pl/docs)
-- **GitHub Repository**: [https://github.com/veapjs/veap-kernel](https://github.com/veapjs/veap-kernel)
+- **GitHub Repository**: [https://github.com/veapjs/veap/tree/main/packages/kernel](https://github.com/veapjs/veap/tree/main/packages/kernel)
 
 ## License
 
