@@ -43,12 +43,6 @@ Markdown files under `docs/developer-docs/` have automated consistency checks:
   node docs/scripts/check-docs.mjs
   ```
 
-The documentation app also generates `apps/veap-docs/lib/ecosystem.generated.json` from `packages/*/package.json` and `veap-registry.json`. If you touch package manifests or registry entries, regenerate it and verify:
-```bash
-node apps/veap-docs/scripts/generate-ecosystem.mjs
-node apps/veap-docs/scripts/generate-ecosystem.mjs --check
-```
-
 ## Changes and versioning
 
 This repository uses [Changesets](https://github.com/changesets/changesets) for semver versioning and changelogs:

@@ -3,17 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/generate-ecosystem.mjs && next dev",
-    "build": "node scripts/generate-ecosystem.mjs && next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "node ../../docs/scripts/check-docs.mjs",
     "predev": "node ../../docs/scripts/check-docs.mjs && rm -rf docs && mkdir -p docs && cp -R ../../docs/developer-docs docs/developer-docs ",
-    "prebuilds": "node ../../docs/scripts/check-docs.mjs && rm -rf docs && mkdir -p docs && cp -R ../../docs/developer-docs docs/developer-docs ",
+    "prebuild": "node ../../docs/scripts/check-docs.mjs && rm -rf docs && mkdir -p docs && cp -R ../../docs/developer-docs docs/developer-docs ",
     "docs:check": "node ../../docs/scripts/check-docs.mjs",
-    "ecosystem:generate": "node scripts/generate-ecosystem.mjs",
-    "ecosystem:check": "node scripts/generate-ecosystem.mjs --check",
-    "deploy": "node ../../docs/scripts/check-docs.mjs && node scripts/generate-ecosystem.mjs --check && rm -rf docs && mkdir -p docs && cp -R ../../docs/developer-docs docs/developer-docs && vercel --prod"
+    "deploy": "node ../../docs/scripts/check-docs.mjs && rm -rf docs && mkdir -p docs && cp -R ../../docs/developer-docs docs/developer-docs && vercel --prod"
   },
   "dependencies": {
     "@databuddy/sdk": "^2.4.20",

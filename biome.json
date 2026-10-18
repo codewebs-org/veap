@@ -16,7 +16,6 @@
       "!build",
       "!.agents",
       "!.changeset",
-      "!**/ecosystem.generated.json",
       "!packages/create-veap/templates/"
     ]
   },
