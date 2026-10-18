@@ -1,4 +1,4 @@
 {
-  "title": "Plugin tooling",
-  "pages": ["cli"]
+  "title": "Plugins",
+  "pages": ["official-plugins", "cli"]
 }

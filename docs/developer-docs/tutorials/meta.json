@@ -1,4 +1,8 @@
 {
   "title": "Tutorials",
-  "pages": ["fullstack-blog-cms"]
+  "pages": [
+    "fullstack-blog-cms",
+    "rest-api-microservices",
+    "authoring-a-plugin"
+  ]
 }

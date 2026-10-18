@@ -115,6 +115,33 @@ export class OrderService {
 > [!WARNING]
 > When injecting another class via constructor metadata (without an explicit `@Inject(token)` decorator), never import that class using `import type`. TypeScript erases type-only imports from `design:paramtypes` metadata and replaces them with `Object`, causing the container to throw an error at runtime. Always use a value import for class constructor tokens, or annotate the parameter with `@Inject(TOKEN)`.
 
+## Method injection with `container.call()`
+
+In addition to constructor injection, `Container` supports method-level dependency injection through `container.call(target, method, ...extraArgs)`.
+
+The container inspects method parameters decorated with `@Inject(token)` or class tokens from `design:paramtypes`, resolves each dependency asynchronously from the container, and supplies any remaining non-injected parameters sequentially from `extraArgs`:
+
+```ts
+import { app, Inject, type ILogger, LOGGER } from "@veap/kernel";
+
+export class ReportGenerator {
+  async generate(
+    reportType: string,
+    @Inject(LOGGER) logger: ILogger,
+    format: "pdf" | "csv" = "pdf",
+  ): Promise<string> {
+    logger.info("reports", `Generating ${reportType} report as ${format}`);
+    return `report-${reportType}.${format}`;
+  }
+}
+
+// Invocations resolve @Inject(LOGGER) automatically:
+const generator = new ReportGenerator();
+const result = await app().call(generator, "generate", "sales", "pdf");
+```
+
+This pattern is especially useful in plugin lifecycle hooks (such as `init`, `onEnable`, and `onMigrate`) and controller action dispatchers where parameters combine container-managed services and runtime arguments.
+
 ## Writing a `ServiceProvider`
 
 Instead of scattering `container.register()` calls across your project, Veap organizes bindings into modular `ServiceProvider` classes. Every `@veap/*` package exports a `ServiceProvider`, and you can write custom providers for your own application domains.

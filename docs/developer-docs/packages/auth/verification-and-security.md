@@ -105,9 +105,68 @@ export class CustomNotificationProvider extends ServiceProvider {
 
 ## Identity augmentation and 2FA challenge hooks
 
-Plugins and application modules can enrich the authenticated `user` and `session` objects or intercept login to require a Multi-Factor Authentication (2FA) challenge:
+Plugins and application modules can enrich the authenticated `user` and `session` objects or intercept login to require Multi-Factor Authentication (2FA) challenges using extensible registry hooks:
 
-- **`registerIdentityAugmenter(id, async (user) => ({ ... }))`**: Appends custom properties to the `FullUser` object returned by `getCurrentSession()`.
-- **`registerSessionAugmenter(id, async (session) => ({ ... }))`**: Appends custom properties or flags to the active `Session`.
-- **`registerAuthValidator(id, async (userId) => ...)`**: Runs during `signIn()`. If a validator returns `{ status: "CHALLENGE_REQUIRED", challengeType: "totp", ... }`, `signIn` halts before creating a session cookie so your UI can prompt for a 2FA code and then call `finalizeLogin(userId, { twoFactorVerified: true })`.
-- **`registerSecurityRequirement(id, async (session, user, path) => ...)`**: Enforces custom session gates (such as onboarding completion or mandatory 2FA) when `checkSecurity(...)` runs.
+### 1. Enriching user and session data (`registerIdentityAugmenter` and `registerSessionAugmenter`)
+
+Register an identity augmenter in a `ServiceProvider.boot()` method to attach custom properties (such as billing tier, active organization, or team permissions) to the `FullUser` object returned by `getCurrentSession()`:
+
+```ts
+import { registerIdentityAugmenter, registerSessionAugmenter } from "@veap/auth";
+
+// Append extra profile data to the authenticated user
+registerIdentityAugmenter("organization-data", async (user) => {
+  // Query custom organization table
+  return {
+    organizationId: "org_123",
+    plan: "pro",
+  };
+});
+
+// Append custom flags to the active session
+registerSessionAugmenter("device-info", async (session) => {
+  return {
+    isTrustedDevice: true,
+  };
+});
+```
+
+### 2. Intercepting authentication (`registerAuthValidator`)
+
+Run custom validation during `signIn()`. If a validator returns `CHALLENGE_REQUIRED`, `signIn` halts before issuing a session cookie, enabling your UI to present a 2FA prompt:
+
+```ts
+import { registerAuthValidator } from "@veap/auth";
+
+registerAuthValidator("totp-check", async (userId) => {
+  const user = await User.find(userId);
+  if (user?.totp_key) {
+    return {
+      status: "CHALLENGE_REQUIRED",
+      challengeType: "totp",
+      userId,
+    };
+  }
+  return { status: "SUCCESS" };
+});
+```
+
+Once the user provides a valid 6-digit TOTP code, call `finalizeLogin(userId, { twoFactorVerified: true })` from your 2FA verification action to create the authenticated session cookie.
+
+### 3. Enforcing route security gates (`registerSecurityRequirement`)
+
+Enforce prerequisite conditions (such as mandatory onboarding or email verification) before granting access to protected routes:
+
+```ts
+import { registerSecurityRequirement } from "@veap/auth";
+
+registerSecurityRequirement("verified-email-required", async (session, user, path) => {
+  if (path.startsWith("/dashboard") && !user.email_verified) {
+    return {
+      allowed: false,
+      redirect: "/verify-email",
+    };
+  }
+  return { allowed: true };
+});
+```
