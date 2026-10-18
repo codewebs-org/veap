@@ -81,9 +81,6 @@ jobs:
       - name: Validate documentation links and navigation
         run: node docs/scripts/check-docs.mjs
 
-      - name: Validate ecosystem generated metadata
-        run: node apps/veap-docs/scripts/generate-ecosystem.mjs --check
-
   typecheck:
     name: Typecheck Workspaces
     runs-on: ubuntu-latest

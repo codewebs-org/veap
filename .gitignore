@@ -32,3 +32,4 @@ yarn-error.log*
 .DS_Store
 *.pem
 apps/05_fullstack/construction.sqlite
+.vercel
