@@ -1,5 +1,4 @@
-[![CI](https://github.com/veapjs/veap-mail/actions/workflows/CI.yml/badge.svg)](https://github.com/veapjs/veap-mail/actions/workflows/CI.yml)
-[![Release](https://github.com/veapjs/veap-mail/actions/workflows/RELEASE.yml/badge.svg)](https://github.com/veapjs/veap-mail/actions/workflows/RELEASE.yml)
+
 [![Version](https://img.shields.io/npm/v/@veap%2Fmail?style=flat-square&color=181717&logo=npm&logoColor=959da5)](https://www.npmjs.com/package/@veap/mail)
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?style=flat-square&logo=discord&logoColor=959da5)](https://discord.gg/qTkrCwpMW)
 
