@@ -1,6 +1,6 @@
 {
   "name": "@veap/auth",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Authentication, session management, RBAC, and crypto adapters for Veap",
   "author": "Damian Miller",
   "bugs": "https://github.com/veapjs/veap/issues",

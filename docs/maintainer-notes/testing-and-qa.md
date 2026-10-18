@@ -203,7 +203,7 @@ bun run check:write
 bun run check:arch
 
 # 3. Type-check the entire workspace
-bun run check-types
+bun run check:types
 
 # 4. Run workspace unit and integration tests
 bun run test

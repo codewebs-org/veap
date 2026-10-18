@@ -28,7 +28,7 @@ Before adding or refactoring packages, consult the maintainer notes:
 - Run `bun install` after pulling new changes or modifying dependencies.
 - Run `bun run check:write` to format the entire workspace with Biome before committing.
 - Run `bun run check:arch` to verify package architectural boundaries and invariants.
-- Run `bun run check-types` to type-check without emitting files (`tsc --noEmit`).
+- Run `bun run check:types` to type-check without emitting files (`tsc --noEmit`).
 - Run `bun run test` to run the workspace tests.
 - Run `bun run build` if you need compiled outputs.
 
@@ -80,4 +80,4 @@ New Veap applications are scaffolded with `create-veap`. The package source live
 - If a command complains about missing types or packages, try `bun install` first.
 - If a file is unexpectedly empty or missing, check whether it is supposed to be generated (for example `ecosystem.generated.json`) and regenerate it.
 - If documentation checks fail after moving files, update the relative links and the corresponding `meta.json` navigation file.
-- When a change touches multiple areas, run the checks in order: format (`check:write`), typecheck (`check-types`), tests (`test`), then documentation checks (`check-docs.mjs`).
+- When a change touches multiple areas, run the checks in order: format (`check:write`), typecheck (`check:types`), tests (`test`), then documentation checks (`check-docs.mjs`).

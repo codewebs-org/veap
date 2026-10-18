@@ -1,5 +1,11 @@
 # @veap/auth
 
+## 0.1.10
+
+### Patch Changes
+
+- Fix session expiration calculation to use a fixed 7-day interval and prevent DST shifts
+
 ## 0.1.9
 
 ### Patch Changes

@@ -7,7 +7,6 @@ import {
   Injectable,
   REQUEST_CONTEXT,
 } from "@veap/kernel";
-import { addDays } from "date-fns";
 import { augmentSession } from "../common/augment.js";
 import { getAuthRoutes } from "../common/context.js";
 import type {
@@ -198,7 +197,7 @@ export class SessionService {
 
     return await this.sessions.create({
       id: sessionId,
-      expiresAt: new Date(addDays(new Date(), 7)),
+      expiresAt: new Date(Date.now() + 7 * 86_400_000),
       userId,
       metadata: flags,
     });

@@ -18,7 +18,7 @@
 
 ## Quality Checklist
 - [ ] Code passes all checks (`bun run check`).
-- [ ] TypeScript types check successfully (`bun run check-types`).
+- [ ] TypeScript types check successfully (`bun run check:types`).
 - [ ] All tests pass (`bun run test`).
 - [ ] A changeset has been created (`bun run changeset`) if modifying packages intended for release.
 - [ ] Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) standard.

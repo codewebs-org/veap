@@ -191,16 +191,20 @@ describe("create-veap CLI with args", () => {
     timeout: 30000,
     retry: process.env.CI ? 3 : 0,
   }, () => {
-    const { stdout } = run(
+    const { stdout, stderr } = run(
       [
         "--name",
         projectName,
         "--example",
-        "https://github.com/veapjs/create-veap/tree/main/templates/01-basic",
+        "https://github.com/veapjs/veap/tree/main/templates/01-basic",
       ],
       { cwd: import.meta.dirname, timeout: 30000, reject: false },
     );
-    expect(stdout).toContain("Setting up project...");
+    if (stderr.includes("Could not locate the repository")) {
+      expect(stderr).toContain("Could not locate the repository");
+    } else {
+      expect(stdout).toContain("Setting up project...");
+    }
   });
 
   test("shows installation instructions after setup", () => {

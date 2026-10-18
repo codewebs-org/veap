@@ -8,7 +8,7 @@
     "*.ts",
     "*.mjs",
     "*.js",
-    "apps/**/*",
+    "scripts/**/*",
     "packages/**/*",
     "plugins/**/*"
   ],

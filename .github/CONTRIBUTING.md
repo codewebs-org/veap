@@ -327,7 +327,7 @@ For example:
 
 ```bash
 bun run check
-bun run check-types
+bun run check:types
 bun run test
 bun run build
 ```
