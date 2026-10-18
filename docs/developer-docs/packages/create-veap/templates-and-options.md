@@ -20,15 +20,28 @@ bun create veap my-app --template 01-basic --skip-install
 
 `create-veap` inspects the `npm_config_user_agent` environment variable to detect whether you invoked it via `bun`, `pnpm`, `npm`, or `yarn`, and runs `<packageManager> install` automatically using the matching tool.
 
-## What the `01-basic` template includes
+## Built-in templates
 
-The default `01-basic` template sets up a ready-to-run Next.js 16 App Router workspace with React 19, TypeScript, and Tailwind CSS v4:
+`create-veap` provides built-in starter templates for different application architectures:
+
+### `01-basic` (Next.js App Router)
+
+The default template sets up a ready-to-run Next.js 16 App Router workspace with React 19, TypeScript, and Tailwind CSS v4:
 
 - **`lib/veap.ts`**: Application composition root (`Application.configure()...create()`) and the `initializeSystem()` bootstrap helper.
 - **`instrumentation.ts`**: Next.js server startup hook (`register()`) guarded for the `nodejs` runtime.
 - **`app/`**: Next.js App Router layout (`app/layout.tsx`), global Tailwind CSS v4 styles (`app/globals.css`), and starter landing page (`app/page.tsx`).
 - **`.env`**: Pre-populated environment variable placeholders (`DATABASE_URL`, `NODE_ENV`).
 - **`AGENTS.md`**: Contextual instructions for AI coding assistants working inside your project.
+
+### `02-hono` (Hono microservice and REST API)
+
+A lightweight API service starter pairing [Hono](https://hono.dev) with `@veap/kernel`:
+
+- **`src/veap.ts`**: Veap composition root with Hono cookie and header transport adapters and bootstrap lifecycle.
+- **`src/providers/app.provider.ts`**: Modular `ServiceProvider` binding application services into the IoC container.
+- **`src/services/greeting.service.ts`**: Example domain service resolved from the IoC container.
+- **`src/index.ts`**: Hono routing with `contextStorage()` middleware and universal runtime support (Node.js and Bun).
 
 ## Scaffolding from remote Git repositories (`--example`)
 

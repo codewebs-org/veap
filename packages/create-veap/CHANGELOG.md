@@ -1,5 +1,13 @@
 # create-veap
 
+## 0.4.6
+
+### Patch Changes
+
+- feat: add 02-hono starter template and improve template directory detection
+  - add 02-hono starter template combining Hono with Veap Kernel IoC
+  - filter directory entries in template detection to prevent non-directory file collisions
+
 ## 0.4.5
 
 ### Patch Changes

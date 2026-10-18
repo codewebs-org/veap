@@ -86,7 +86,11 @@ type TemplateCaseArgs = { name: string; index: number; dependencies: string[] };
 const templateChooseCases = (() => {
   // grab the current list of templates
   const templatesRootPath = path.join(import.meta.dirname, "../templates");
-  const templates = fs.readdirSync(templatesRootPath).sort();
+  const templates = fs
+    .readdirSync(templatesRootPath, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
+    .map((entry) => entry.name)
+    .sort();
 
   const seenDependecies: Set<string>[] = [];
 

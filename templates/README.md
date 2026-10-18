@@ -45,12 +45,15 @@ The compilation process in `packages/create-veap` performs these steps:
 
 ## Available templates
 
-The directory includes the following starter template:
+The directory includes the following starter templates:
 
 - **`01-basic`:** A clean starter application configured with Next.js App
   Router, React 19, Tailwind CSS, and the Veap composition root
   (`lib/veap.ts`). It provides an empty foundation for custom application
   development.
+- **`02-hono`:** A lightweight API and microservice starter combining Hono HTTP
+  routing with `@veap/kernel` IoC dependency injection, service providers,
+  and request context adapters.
 
 ## Dependency synchronization
 

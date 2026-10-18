@@ -1,6 +1,6 @@
 {
   "name": "create-veap",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "author": "Damian Miller",
   "type": "module",
   "description": "Initializer for Veap Framework applications",
@@ -20,7 +20,7 @@
   "scripts": {
     "start": "node ./dist/index.js",
     "dev": "bun build --watch",
-    "compile": "rimraf dist && rm -rf templates && cp -r ../../templates templates && rm -rf templates/*/node_modules templates/*/.next templates/*/.cache templates/*/*.tsbuildinfo && (for d in templates/*; do mv $d/.gitignore $d/gitignore || true; done) && bun run build ",
+    "compile": "rimraf dist && rm -rf templates && cp -r ../../templates templates && rm -rf templates/README.md templates/*/node_modules templates/*/.next templates/*/.cache templates/*/*.tsbuildinfo && (for d in templates/*; do [ -d \"$d\" ] && mv \"$d/.gitignore\" \"$d/gitignore\" 2>/dev/null || true; done) && bun run build",
     "build": "tsc",
     "test": "npm_config_user_agent=bun vitest run"
   },

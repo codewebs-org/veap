@@ -1,0 +1,22 @@
+{
+  "name": "02-hono",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "@veap/kernel": "^0.2.2",
+    "hono": "^4.13.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "tsx": "^4.23.0",
+    "typescript": "^5"
+  },
+  "packageManager": "bun@1.4.2"
+}

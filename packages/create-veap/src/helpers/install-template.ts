@@ -5,10 +5,13 @@ import fse from "fs-extra/esm";
 
 export async function getTemplateNames(templateRoot: string) {
   // maybe include `.DS_Store` on macOS
-  const names = (await fsPromises.readdir(templateRoot))
-    .filter((dir) => !dir.startsWith("."))
+  const entries = await fsPromises.readdir(templateRoot, {
+    withFileTypes: true,
+  });
+  return entries
+    .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
+    .map((entry) => entry.name)
     .sort();
-  return names;
 }
 
 export async function installTemplate(

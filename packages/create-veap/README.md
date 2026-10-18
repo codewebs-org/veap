@@ -54,16 +54,10 @@ All flags are optional.
 
 ## What it scaffolds
 
-The `01-basic` template is a starting Next.js 16 App Router project with React Server Components, TypeScript, Tailwind CSS v4, the Geist font source, and an ESLint configuration.
+`create-veap` includes starter templates for different application architectures:
 
-It also scaffolds:
-
-- `lib/veap.ts` with an `Application` composer and `NextTransportServiceProvider` (cookies, headers, and redirects via `next/headers` and `next/navigation`).
-- `instrumentation.ts` with a `register()` function that runs only in the `nodejs` runtime (the initialization code contains a commented-out `ensureVeap` call).
-- `.env` with placeholder environment variables.
-- `AGENTS.md` with instructions for the assistant.
-- `README.md` with project startup instructions.
-- A base `.gitignore`.
+- **`01-basic`**: A starting Next.js 16 App Router project with React Server Components, TypeScript, Tailwind CSS v4, and `@veap/kernel` integration (`lib/veap.ts`, `instrumentation.ts`).
+- **`02-hono`**: A lightweight REST API and microservice starter with [Hono](https://hono.dev), TypeScript, and `@veap/kernel` IoC container and Service Providers (`src/veap.ts`, `src/providers/app.provider.ts`).
 
 ## Documentation
 
