@@ -110,6 +110,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Build all packages (generate declaration files)
+        run: bun run build:packages
+
       - name: Run parallel workspace type checking
         run: bun run check:types
 
@@ -141,6 +144,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Build all packages
+        run: bun run build:packages
 
       - name: Run tests across packages and applications
         run: bun run test
@@ -178,7 +184,12 @@ jobs:
         run: bun run build:packages
 
       - name: Build all plugins
-        run: bun run build:plugins
+        run: |
+          if [ -d "plugins" ] && [ $(find plugins -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l) -gt 0 ]; then
+            bun run build:plugins
+          else
+            echo "No plugin packages found (excluded by .git/info/exclude). Skipping plugin build."
+          fi
 
   ci-gate:
     name: CI Status Gate

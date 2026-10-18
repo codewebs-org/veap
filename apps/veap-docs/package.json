@@ -7,6 +7,7 @@
     "build": "node scripts/generate-ecosystem.mjs && next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node ../../docs/scripts/check-docs.mjs",
     "predev": "node ../../docs/scripts/check-docs.mjs && rm -rf docs && mkdir -p docs && cp -R ../../docs/developer-docs docs/developer-docs ",
     "prebuilds": "node ../../docs/scripts/check-docs.mjs && rm -rf docs && mkdir -p docs && cp -R ../../docs/developer-docs docs/developer-docs ",
     "docs:check": "node ../../docs/scripts/check-docs.mjs",

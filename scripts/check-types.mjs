@@ -14,6 +14,21 @@ if (!fs.existsSync(tscBin)) {
   process.exit(1);
 }
 
+// Ensure package declaration files (.d.ts) exist before checking dependents
+const kernelDts = path.resolve(rootDir, "packages/kernel/dist/index.d.ts");
+if (!fs.existsSync(kernelDts)) {
+  console.log(
+    "📦 Core package declarations missing; building packages first...",
+  );
+  const { execSync } = await import("node:child_process");
+  try {
+    execSync("bun run build:packages", { cwd: rootDir, stdio: "inherit" });
+  } catch (_err) {
+    console.error("❌ Failed to pre-build packages for type declarations.");
+    process.exit(1);
+  }
+}
+
 const targets = [];
 const scanGroups = ["packages", "plugins", "apps"];
 
