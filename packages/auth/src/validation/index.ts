@@ -59,3 +59,6 @@ export type RegisterInput = z.infer<typeof registerSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
+export type TotpSetupInput = z.infer<typeof totpSetupSchema>;
+export type TotpVerifyInput = z.infer<typeof totpVerifySchema>;
+export type BackupCodeInput = z.infer<typeof backupCodeSchema>;

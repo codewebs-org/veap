@@ -161,12 +161,12 @@ Enforce prerequisite conditions (such as mandatory onboarding or email verificat
 import { registerSecurityRequirement } from "@veap/auth";
 
 registerSecurityRequirement("verified-email-required", async (session, user, path) => {
-  if (path.startsWith("/dashboard") && !user.email_verified) {
+  if (path?.startsWith("/dashboard") && !user.emailVerifiedAt) {
     return {
-      allowed: false,
+      satisfied: false,
       redirect: "/verify-email",
     };
   }
-  return { allowed: true };
+  return { satisfied: true };
 });
 ```

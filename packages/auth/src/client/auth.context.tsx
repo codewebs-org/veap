@@ -33,6 +33,10 @@ export interface AuthProviderProps {
   initialSession?: AuthSession | null;
   prefix?: string;
   routes?: AuthRoutesConfig;
+  /**
+   * Endpoint URL to refetch current session. Defaults to "/api/auth/me".
+   */
+  sessionEndpoint?: string;
 }
 
 export function AuthProvider({
@@ -40,6 +44,7 @@ export function AuthProvider({
   initialSession,
   prefix = "/app",
   routes = DEFAULT_AUTH_ROUTES,
+  sessionEndpoint = "/api/auth/me",
 }: AuthProviderProps) {
   const [user, setUser] = useState<AuthSession["user"] | null | undefined>(
     initialSession?.user ?? null,
@@ -52,7 +57,7 @@ export function AuthProvider({
   const refetchUser = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/auth/me", { credentials: "same-origin" });
+      const res = await fetch(sessionEndpoint, { credentials: "same-origin" });
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);

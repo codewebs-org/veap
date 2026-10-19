@@ -9,7 +9,7 @@
 | Subpath | Description |
 | :--- | :--- |
 | `@veap/auth` | Main barrel exporting `AuthServiceProvider`, Server Actions (`signIn`, `signUp`, `signOut`, `getCurrentSession`), notification helpers (`sendVerifyEmail`, `sendResetPassword`, `sendRecoveryCode`, `send2FACode`), RBAC helpers, and validation schemas. |
-| `@veap/auth/server` | Server-only cryptographic utilities (`hashPassword`, `verifyPasswordHash`, `encrypt`, `decrypt`, `encryptionKey`), `SessionService`, `UserService`, and `RbacService`. |
+| `@veap/auth/server` | Server-only cryptographic utilities (`hashPassword`, `verifyPasswordHash`, `encrypt`, `decrypt`, `encryptionKey`), `SessionService`, `UserService`, `RbacService`, and route handler helpers (`handleAuthMe`). |
 | `@veap/auth/client` | Client React components and hooks (`<AuthProvider>`, `useUser`, `useAuthRoutes`). |
 | `@veap/auth/actions` | Next.js Server Actions (`signIn`, `signUp`, `signOut`, `getCurrentSession`, `requestPasswordReset`, `resetPassword`, `verifyEmail`, RBAC actions). |
 | `@veap/auth/models` | Active Record models (`User`, `Session`, `Role`, `Permission`, `EmailVerificationRequest`, `PasswordResetSession`). |
@@ -45,7 +45,7 @@ All mutation actions return `@veap/kernel`'s `Result<T>` discriminated union:
 
 | Model | Table | Key Relations & Columns |
 | :--- | :--- | :--- |
-| `User` | `users` | `id`, `username`, `email`, `password`, `email_verified`, `totp_key`, `recovery_code`, `roles()`, `sessions()` |
+| `User` | `users` | `id`, `name`, `email`, `password`, `image`, `recovery_code`, `email_verified_at`, `roles()`, `sessions()` |
 | `Session` | `sessions` | `id`, `user_id`, `expires_at`, `two_factor_verified`, `user()` |
 | `Role` | `roles` | `id`, `name`, `description`, `permissions()`, `users()` |
 | `Permission` | `permissions` | `id`, `name`, `description`, `roles()` |

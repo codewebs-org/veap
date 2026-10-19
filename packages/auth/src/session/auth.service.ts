@@ -1,5 +1,4 @@
 import {
-  AppError,
   CACHE_PROVIDER,
   eventBus,
   type ICacheProvider,
@@ -196,6 +195,11 @@ export class AuthService {
     );
 
     const fullUser = await performFullUserAugmentation(user);
+
+    await eventBus.publish("system:auth:signup", {
+      session,
+      user: fullUser,
+    });
 
     await eventBus.publish("system:auth:register", {
       session,

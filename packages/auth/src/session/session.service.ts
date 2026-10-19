@@ -1,6 +1,7 @@
 import { isIP } from "node:net";
 import {
   COOKIE_STORE,
+  eventBus,
   type ICookieStore,
   type IHttpRequestContext,
   Inject,
@@ -99,10 +100,7 @@ export class SessionService {
     };
 
     // AUGMENT (EXTENSIBILITY POINTS)
-    const augmentedUser = await performFullUserAugmentation(
-      safeUser as User,
-      sessionWithFlags as SessionType,
-    );
+    const augmentedUser = await performFullUserAugmentation(safeUser as User);
     const augmentedSession = await augmentSession(
       sessionWithFlags as SessionType,
     );
@@ -225,11 +223,15 @@ export class SessionService {
    * Signs the user out and redirects to the sign-in page.
    */
   public async sessionSignOut(): Promise<void> {
-    const { session } = await this.getCurrentSession();
+    const { session, user } = await this.getCurrentSession();
 
     if (session) {
       await this.invalidateSession(session.id);
       await this.deleteSessionTokenCookie();
+    }
+
+    if (user) {
+      await eventBus.publish("system:auth:signed-out", { user });
     }
 
     const routes = getAuthRoutes();

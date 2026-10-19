@@ -46,6 +46,18 @@ export const getCurrentSession = cache(async (): Promise<AuthSession> => {
   }
 });
 
+/**
+ * Standard HTTP handler returning JSON of the current session ({ session, user }).
+ * Can be exported directly as a Route Handler:
+ * `export { handleAuthMe as GET } from "@veap/auth/server";`
+ */
+export async function handleAuthMe(): Promise<Response> {
+  const current = await getCurrentSession();
+  return Response.json(current, {
+    status: current.session ? 200 : 401,
+  });
+}
+
 export async function invalidateSession(sessionId: string): Promise<void> {
   const service = await resolveSessionService();
   return service.invalidateSession(sessionId);

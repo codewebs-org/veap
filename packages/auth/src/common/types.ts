@@ -169,6 +169,14 @@ export type AuthEventPayloads = {
   };
 
   /**
+   * Emitted after a new user successfully registers (alias of system:auth:signup).
+   */
+  "system:auth:register": {
+    session: Session;
+    user: User;
+  };
+
+  /**
    * Emitted after a user signs out.
    */
   "system:auth:signed-out": {
@@ -179,8 +187,9 @@ export type AuthEventPayloads = {
    * Emitted when a password reset is requested.
    */
   "system:auth:password-reset:requested": {
-    userId: string;
+    userId?: string;
     email: string;
+    code?: string;
   };
 
   /**
@@ -194,8 +203,9 @@ export type AuthEventPayloads = {
    * Emitted when a verification email is sent.
    */
   "system:auth:verification-requested": {
-    userId: string;
+    userId?: string;
     email: string;
+    code?: string;
   };
 
   /**
@@ -205,4 +215,24 @@ export type AuthEventPayloads = {
     userId: string;
     email: string;
   };
+
+  /**
+   * Emitted when a recovery code is generated or reset.
+   */
+  "system:auth:recovery-code:generated": {
+    email: string;
+    recoveryCode: string;
+  };
+
+  /**
+   * Emitted when a two-factor authentication challenge code is requested.
+   */
+  "system:auth:2fa-code:requested": {
+    email: string;
+    code: string;
+  };
 };
+
+declare module "@veap/kernel" {
+  interface SystemEventsMap extends AuthEventPayloads {}
+}

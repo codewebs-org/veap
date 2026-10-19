@@ -1,13 +1,4 @@
-import {
-  augmentSession,
-  augmentUser,
-  registerIdentityAugmenter,
-  registerPasswordResetSessionAugmenter,
-  registerSessionAugmenter,
-  unregisterIdentityAugmenter,
-  unregisterPasswordResetSessionAugmenter,
-  unregisterSessionAugmenter,
-} from "./augment.js";
+import { augmentUser } from "./augment.js";
 import { authContext, getAuthRoutes, isAuthContextBound } from "./context.js";
 import { AuthCallbackRegistry } from "./registry.js";
 import type {
@@ -142,17 +133,6 @@ export function unregisterEmailVerificationValidator(
   return emailVerificationValidators.unregister(idOrValidator);
 }
 
-export {
-  augmentSession,
-  augmentUser,
-  registerIdentityAugmenter,
-  registerPasswordResetSessionAugmenter,
-  registerSessionAugmenter,
-  unregisterIdentityAugmenter,
-  unregisterPasswordResetSessionAugmenter,
-  unregisterSessionAugmenter,
-};
-
 export function registerSecurityRequirement(
   requirement: SecurityRequirement,
 ): void;
@@ -272,7 +252,6 @@ export async function checkSecurity(
  */
 export async function performFullUserAugmentation(
   user: User,
-  session?: Session,
 ): Promise<FullUser> {
   let rbacData = {};
   if (isAuthContextBound()) {
