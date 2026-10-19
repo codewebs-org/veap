@@ -93,3 +93,18 @@ export async function verifyResetCode(
   const service = await resolvePasswordResetService();
   return service.verifyResetCode(sessionId, code);
 }
+
+export async function validatePasswordResetSession(
+  token: string,
+): Promise<{ session: PasswordResetSessionType; user: any }> {
+  const service = await resolvePasswordResetService();
+  return service.validatePasswordResetSession(token);
+}
+
+export async function verifyPasswordResetSessionCode(
+  token: string,
+  code: string,
+): Promise<boolean> {
+  const service = await resolvePasswordResetService();
+  return service.verifyPasswordResetSessionCode(token, code);
+}

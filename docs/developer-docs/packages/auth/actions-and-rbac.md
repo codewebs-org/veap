@@ -67,7 +67,8 @@ store it securely on the device, then pass it in the `Authorization` header
 `getCurrentSession()` automatically inspects the `Authorization: Bearer <token>` header before falling back to cookies:
 
 ```ts
-// app/api/me/route.ts
+// app/api/auth/me/route.ts
+// You can also simply re-export: export { handleAuthMe as GET } from "@veap/auth/server";
 import { NextResponse } from "next/server";
 import { getCurrentSession } from "@veap/auth";
 import { initializeSystem } from "@/lib/veap";
@@ -83,9 +84,9 @@ export async function GET() {
   return NextResponse.json({
     user: {
       id: user.id,
-      username: user.username,
+      name: user.name,
       email: user.email,
-      roles: user.roles?.map((r) => r.name) ?? [],
+      roles: user.roles ?? [],
     },
   });
 }
@@ -93,7 +94,7 @@ export async function GET() {
 
 ## Role-Based Access Control (RBAC)
 
-`@veap/auth/models` provides `User`, `Role`, and `Permission` Active Record models linked by many-to-many pivot tables (`user_roles` and `role_permissions`). You can also use the RBAC Server Actions (`assignRoleToUser`, `assignPermissionToRole`, `createRole`, `createPermission`) from `@veap/auth`:
+`@veap/auth/models` provides `User`, `Role`, and `Permission` Active Record models linked by many-to-many pivot tables (`users_to_roles` and `roles_to_permissions`). You can also use the RBAC Server Actions (`assignRoleToUser`, `assignPermissionToRole`, `createRole`, `createPermission`) from `@veap/auth`:
 
 ```ts
 import { Permission, Role, User } from "@veap/auth/models";
@@ -114,7 +115,7 @@ await editorRole.permissions().attach(publishPerm.id);
 
 // Create a user and attach the role
 const user = await User.create({
-  username: "ada",
+  name: "ada",
   email: "ada@example.com",
   password: await hashPassword("StrongPassword!123"),
   recovery_code: Buffer.from("recovery-secret-bytes"),

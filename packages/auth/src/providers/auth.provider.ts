@@ -201,12 +201,26 @@ export class AuthServiceProvider extends ServiceProvider {
   }
 
   async boot(): Promise<void> {
-    // 0. Auto-bootstrap setup state
+    // 1. Database migrations (when enabled and database is connected)
+    const shouldMigrate = this.config?.autoMigrate ?? true;
+    if (shouldMigrate && isDatabaseInitialized()) {
+      try {
+        await runAuthMigrations();
+      } catch (error: any) {
+        logger.error(
+          "veap:auth",
+          "Failed to run auth database migrations during boot:",
+          error.message,
+        );
+      }
+    }
+
+    // 2. Auto-bootstrap setup state
     try {
       await isSystemInstalled();
     } catch {}
 
-    // 1. Resolve domain services and bind singleton auth context
+    // 3. Resolve domain services and bind singleton auth context
     const user = await this.container.resolve<UserService>(UserService);
     const session =
       await this.container.resolve<SessionService>(SessionService);
@@ -232,7 +246,7 @@ export class AuthServiceProvider extends ServiceProvider {
       routes: this.resolveRoutes(),
     });
 
-    // 2. Register route rewrites if RouterService is available
+    // 4. Register route rewrites if RouterService is available
     if (this.container.has(ROUTER_SERVICE)) {
       const router = await this.container.resolve<any>(ROUTER_SERVICE);
       const routes = this.resolveRoutes();
@@ -259,20 +273,6 @@ export class AuthServiceProvider extends ServiceProvider {
       }
       if (routes.verifyEmail !== DEFAULT_AUTH_ROUTES.verifyEmail) {
         addRewrite(routes.verifyEmail, DEFAULT_AUTH_ROUTES.verifyEmail);
-      }
-    }
-
-    // 3. Database migrations (when enabled and database is connected)
-    const shouldMigrate = this.config?.autoMigrate ?? true;
-    if (shouldMigrate && isDatabaseInitialized()) {
-      try {
-        await runAuthMigrations();
-      } catch (error: any) {
-        logger.error(
-          "veap:auth",
-          "Failed to run auth database migrations during boot:",
-          error.message,
-        );
       }
     }
   }

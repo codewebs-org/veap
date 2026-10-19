@@ -61,7 +61,7 @@ export default async function DashboardPage() {
   return (
     <main className="p-6">
       <h1 className="text-2xl font-bold">
-        {t("dashboard.welcome", { username: user.username })}
+        {t("dashboard.welcome", { name: user.name })}
       </h1>
     </main>
   );

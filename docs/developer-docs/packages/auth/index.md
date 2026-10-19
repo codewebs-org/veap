@@ -45,7 +45,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-bold">Welcome back, {session.user.username}</h1>
+      <h1 className="text-2xl font-bold">Welcome back, {session.user.name}</h1>
       <p className="text-muted-foreground">{session.user.email}</p>
     </main>
   );
@@ -143,15 +143,36 @@ the user with full roles and permissions.
 To read the authenticated user in Client Components (`"use client"`), wrap your layout in `<AuthProvider>` from `@veap/auth/client` and call `useUser()`:
 
 ```tsx
+// app/providers.tsx
+"use client";
+
+import { AuthProvider } from "@veap/auth/client";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  // sessionEndpoint defaults to "/api/auth/me"
+  return <AuthProvider>{children}</AuthProvider>;
+}
+```
+
+Expose the session endpoint using `handleAuthMe` from `@veap/auth/server`:
+
+```ts
+// app/api/auth/me/route.ts
+export { handleAuthMe as GET } from "@veap/auth/server";
+```
+
+Then read user state anywhere in client component trees:
+
+```tsx
 // components/user-menu.tsx
 "use client";
 
 import { useUser } from "@veap/auth/client";
 
 export function UserMenu() {
-  const { user, loading } = useUser();
+  const { user, isLoading } = useUser();
 
-  if (loading) {
+  if (isLoading) {
     return <span>Loading session...</span>;
   }
 
@@ -159,7 +180,7 @@ export function UserMenu() {
     return <a href="/login">Sign in</a>;
   }
 
-  return <span>Signed in as {user.username}</span>;
+  return <span>Signed in as {user.name}</span>;
 }
 ```
 
