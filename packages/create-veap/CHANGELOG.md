@@ -1,5 +1,11 @@
 # create-veap
 
+## 0.4.7
+
+### Patch Changes
+
+- [`8fcaf8b`](https://github.com/veapjs/veap/commit/8fcaf8ba09e6e12f917a7f7b07acc4b88145f613) Thanks [@codewebs-org](https://github.com/codewebs-org)! - refactor(templates): import NextTransportServiceProvider from @veap/kernel/next in 01-basic template
+
 ## 0.4.6
 
 ### Patch Changes

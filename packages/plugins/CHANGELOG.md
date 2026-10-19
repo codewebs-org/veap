@@ -1,5 +1,12 @@
 # @veap/plugins
 
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [[`bece042`](https://github.com/veapjs/veap/commit/bece042e820444f2b6fe89b15df882e9c77b8750)]:
+  - @veap/auth@0.1.11
+
 ## 0.1.10
 
 ### Patch Changes
