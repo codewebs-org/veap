@@ -1,5 +1,15 @@
 # @veap/plugins
 
+## 0.1.12
+
+### Patch Changes
+
+- fix(router): prevent SoftNavigationInterceptor from hijacking internal links when onNavigate is not configured
+  
+  - Return early in `SoftNavigationInterceptor` when `onNavigate` is not provided to prevent calling `e.preventDefault()` and `window.history.pushState` on clicks.
+  - Allow framework client-side navigation (for example, Next.js `<Link>`) and standard browser links to navigate properly inside virtual router layouts.
+  - Export `handleSoftNavigationClick` helper function with comprehensive unit tests.
+
 ## 0.1.11
 
 ### Patch Changes

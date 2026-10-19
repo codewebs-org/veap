@@ -1,6 +1,6 @@
 {
   "name": "@veap/plugins",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Plugin lifecycle, extension points, and virtual router for Veap",
   "author": "Damian Miller",
   "bugs": "https://github.com/veapjs/veap/issues",
